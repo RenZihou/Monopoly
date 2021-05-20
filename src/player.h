@@ -10,23 +10,28 @@
 
 #include "card.h"
 #include "skill.h"
+#include "world.h"
 
 class Player {
 private:
+    int id;
     std::string name;
     int pos;
     int fund;
     std::vector<Card> cards;
-    // std::vector<SKill> skill;
+    std::vector<Skill> skill;
     int frozen;
 
 public:
-    Player();
-    ~Player();
-    void move(int steps);
-    void upd_fund(int add);
-    void buy_land(int pos);
-    void upd_land(int pos);
+    Player(int id, std::string name, int init_pos, int init_fund);
+    ~Player() = default;
+    void move_to(int new_pos);
+    bool upd_fund(int add);
+    bool buy_land(CLand &land);
+    bool upd_land(CLand &land);
+    void use_card();
+    void use_skill();
+    void promote();
 };
 
 #endif

@@ -1,0 +1,162 @@
+# Monopoly
+
+***
+
+## Game Rules
+
+* Initial Funds: 1500 / player
+* Rules of Moving: roll / strategy card
+* Commercial Land:
+    * empty: buy with fund
+    * self: upgrade
+    * other's: pay rent (oblige)
+* Functional Land:
+    * providing strategy card
+    * ban moving for 3 rounds
+* Strategy Card:
+    * 1 ~ 5 step card
+* Transfer & Promotion:
+    * Skills
+        * Effects
+        * Cooldown time
+        * level
+    * Promotion
+    * Transfer
+* Loss & Win:
+    * Out if fund <= 0
+* Other Rules:
+    * one player on each land at most (force previous player to move forward 1 step)
+    * 
+
+***
+
+## Project structure
+
+### Game
+
+singleton
+
+* each round (each player):
+
+1. check (update) `movable` -> jump to 2 or 4
+2. roll or use card
+3. update `pos`
+4. check `land`
+5. 
+
+### Player
+
+```c++
+class Player {
+    string name;
+    int fund;
+    int spwan_pos;
+    int pos;
+    int xp;
+    vector<Building> buildings;
+    vector<Card> cards;
+    Skill skill;
+};
+```
+
+### World
+
+#### Land
+
+```c++
+#define EMPTY 0
+#define COMMERCIAL 1
+#define FUNCTIONAL 2
+
+class Land {
+    // int type;
+};
+
+class CommercialLand : Land {
+    int owner;
+    Building building;
+    int level;
+};
+
+class FunctionalLand : Land {
+    int function;
+};
+```
+
+#### Map
+
+```c++
+class Map {
+    int size;
+    vector<Land> map;
+};
+```
+
+### Building
+
+```c++
+class Building {
+    string name;
+    int max_level;
+    vector<int> upgrade_costs;
+    vector<int> rents;
+}
+```
+
+
+
+### Card
+
+### Skill
+
+
+### Configuration
+
+use config file (``.json`)
+
+api of effects:
+
+* `step [s/o] <n>`: move forward by `n` steps (`n` can be negative)
+* `earn <s/o> <c>`: increase fund by `c` units (`c` can be negative)
+* `freeze <s/o> <r>`: freeze player for `r` rounds (`r` must be positive)
+* `free <r>`: free of rents for `r` rounds
+* : pay `r` times rents
+* `destroy`: destroy the current building
+* `loot`: change the owner of current building to the card user
+* `upgrade`: upgrade current building by 1 level
+* `teleport [s/o] <p>`: teleport player to a random position
+
+#### Strategy Card
+
+```json
+[
+    {
+        "name": "1-step move",
+        "description": "move one step forward and skip the roll",
+        "effect": "",
+        "skip_roll": true,
+        "weight": 0.1
+    }
+]
+```
+
+#### Skill
+
+```json
+[
+    {
+        "name": "roll twice",
+        "description": "",
+        "maxLv": 3,
+        "effect": [],
+        "coolDown": [],
+        "weight": 0.1
+    }
+]
+```
+
+
+
+***
+
+## 

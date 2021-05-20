@@ -1,0 +1,14 @@
+{
+  "player": {
+    "init_fund": 1500
+  },
+  "world": {
+    "default_size": 30,
+    "CLand_prob": 0.7,
+    "FLand_prob": 0.25
+  },
+  "building": {
+    "cost_ratio": 3,
+    "rent_ratio": 5
+  }
+}

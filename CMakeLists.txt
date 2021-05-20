@@ -3,6 +3,8 @@ project(proj)
 
 set(CMAKE_CXX_STANDARD 14)
 
+find_package(nlohmann_json 3.9.1 REQUIRED)
+
 include_directories(src)
 
 add_executable(proj
@@ -16,4 +18,4 @@ add_executable(proj
         src/skill.cpp
         src/skill.h
         src/world.cpp
-        src/world.h)
+        src/world.h src/config.h)
