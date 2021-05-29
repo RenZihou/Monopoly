@@ -6,8 +6,13 @@
 #include <utility>
 #include <vector>
 #include <random>
+#include <fstream>
+
+#include <nlohmann/json.hpp>
 
 #include "world.h"
+
+using json = nlohmann::json;
 
 Building::Building() {
     this->name = "";
@@ -67,13 +72,15 @@ FLand::FLand() {
     this->type = FUNCTIONAL;
 }
 
-Map::Map(int size_, int seed, double c_prob, double f_prob) {
-    this->size = size_;
-    this->seed = seed;
+Map::Map(int size_, int seed, double c_prob, double f_prob) : size(size_),
+                                                              seed(seed) {
+    std::ifstream cf("../conf/buildings.json");
+    json buildings;
+    cf >> buildings;
     std::mt19937 mt(seed);
     std::uniform_real_distribution<double> dist(0, 1);
     while (size--) {
-        Land new_land;
+        Land *new_land = nullptr;
         double r = dist(mt);
         if (r < c_prob) {
             // TODO: create single land
@@ -85,8 +92,6 @@ Map::Map(int size_, int seed, double c_prob, double f_prob) {
     }
 }
 
-//void Map::spawn_player(int num) {
-//    std::mt19937 mt(this->seed);
-//    std::uniform_int_distribution<int> dist(0, this->size - 1);
-//
-//}
+Map::Map(Map &&other) noexcept : size(other.size), seed(other.seed) {
+    this->map = std::move(other.map);
+}

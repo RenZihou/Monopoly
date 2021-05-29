@@ -18,4 +18,4 @@ add_executable(proj
         src/skill.cpp
         src/skill.h
         src/world.cpp
-        src/world.h src/config.h)
+        src/world.h src/config.h src/config.cpp)

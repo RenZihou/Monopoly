@@ -1,0 +1,20 @@
+[
+  {
+    "name": "house unit",
+    "build_cost": 300,
+    "rent": 120,
+    "weight": 0.6
+  },
+  {
+    "name": "hotel",
+    "build_cost": 500,
+    "rent": 240,
+    "weight": 0.3
+  },
+  {
+    "name": "luxurious hotel",
+    "build_cost": 1000,
+    "rent": 500,
+    "weight": 0.1
+  }
+]

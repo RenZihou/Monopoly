@@ -16,8 +16,8 @@
 
 class Building {
 private:
-    static const float cost_ratio;
-    static const float rent_ratio;
+    static const double cost_ratio;
+    static const double rent_ratio;
 
     std::string name;
     int level;
@@ -65,9 +65,11 @@ class Map {
 private:
     int size;
     int seed;
-    std::vector<Land> map;
+    std::vector<*Land> map;
 public:
+    Map() = default;
     Map(int size_, int seed, double c_prob, double f_prob);
+    Map(Map&& other) noexcept;
     ~Map() = default;
 //    void spawn_player(int num);
 };
