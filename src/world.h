@@ -31,6 +31,8 @@ public:
 
     ~Building() = default;
 
+    std::string get_name() const;
+
     int get_cost() const;
 
     int get_rent() const;

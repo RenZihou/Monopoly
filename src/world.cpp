@@ -2,7 +2,6 @@
 // -*- encoding: utf-8 -*-
 // @Author: RZH
 
-//#include <format>
 #include <string>
 #include <utility>
 #include <vector>
@@ -57,13 +56,11 @@ Building::Building(Building &&other) noexcept:
         upgrade_cost(other.upgrade_cost),
         rent(other.rent), owner(other.owner) {}
 
-int Building::get_cost() const {
-    return this->upgrade_cost;
-}
+std::string Building::get_name() const { return this->name; }
 
-int Building::get_rent() const {
-    return this->rent;
-}
+int Building::get_cost() const { return this->upgrade_cost; }
+
+int Building::get_rent() const { return this->rent; }
 
 bool Building::upgrade() {
     this->upgrade_cost = static_cast<int>(this->upgrade_cost *
@@ -73,47 +70,32 @@ bool Building::upgrade() {
     return true;
 }
 
-Land::Land() {
-    this->type = VACANT;
-}
+Land::Land() : type(VACANT) {}
 
 std::string Land::description() {
     return "";
 }
 
-CLand::CLand(Building &building) {
+CLand::CLand(Building &building) : building(&building) {
     this->type = COMMERCIAL;
-    this->owner = -1;
-    this->building = &building;
 }
 
 std::string CLand::description() {
     if (this->owner == -1) {  // without owner
         return "vacant commercial land";
     }
-    return "@";  // TODO
+//    return strcat("@", "[name]", "'s ", this->building.name);  // TODO
 }
 
-void CLand::set_owner(int id) {
-    this->owner = id;
-}
+void CLand::set_owner(int id) { this->owner = id; }
 
-void CLand::upgrade() {
-    this->building->upgrade();
-}
+void CLand::upgrade() { this->building->upgrade(); }
 
-int CLand::get_rent() const {
-    return building->get_rent();
-}
+int CLand::get_rent() const { return building->get_rent(); }
 
-int CLand::get_cost() const {
-    return building->get_cost();
-}
+int CLand::get_cost() const { return building->get_cost(); }
 
-FLand::FLand(Card &card) {
-    this->type = FUNCTIONAL;
-    this->card = &card;
-}
+FLand::FLand(Card &card) : card(&card) { this->type = FUNCTIONAL; }
 
 Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
                                                              seed(seed) {
