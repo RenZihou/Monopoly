@@ -7,6 +7,8 @@
 #include "config.h"
 #include "player.h"
 
+#include <iostream>
+#include <iomanip>
 #include <random>
 #include <utility>
 #include <vector>
@@ -43,5 +45,5 @@ Idea GUI:
 |  [28][                         ] @Alex
 -- [29][                         ]
  */
-void Game::display() {
+void Game::display() const {
 }

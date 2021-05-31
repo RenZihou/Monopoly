@@ -46,6 +46,8 @@ public:
     Land();
 
     ~Land() = default;
+
+    virtual std::string description();
 };
 
 class CLand : public Land {
@@ -56,6 +58,8 @@ public:
     explicit CLand(Building &building);
 
     ~CLand() = default;
+
+    std::string description() override;
 
     void set_owner(int owner_id);
 
@@ -74,6 +78,7 @@ public:
 
     ~FLand() = default;
 
+    std::string description() override;
 };
 
 class Map {

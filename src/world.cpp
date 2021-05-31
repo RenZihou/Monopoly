@@ -2,6 +2,7 @@
 // -*- encoding: utf-8 -*-
 // @Author: RZH
 
+//#include <format>
 #include <string>
 #include <utility>
 #include <vector>
@@ -76,10 +77,21 @@ Land::Land() {
     this->type = VACANT;
 }
 
+std::string Land::description() {
+    return "";
+}
+
 CLand::CLand(Building &building) {
     this->type = COMMERCIAL;
     this->owner = -1;
     this->building = &building;
+}
+
+std::string CLand::description() {
+    if (this->owner == -1) {  // without owner
+        return "vacant commercial land";
+    }
+    return "@";  // TODO
 }
 
 void CLand::set_owner(int id) {
