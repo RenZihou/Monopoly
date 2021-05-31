@@ -11,7 +11,9 @@ class Card {
     private:
     std::string name;
     std::string description;
-    // std::string function;
+public:
+    Card(std::string name, std::string description);
+    ~Card() = default;
 };
 
 

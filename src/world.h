@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-//#include
+#include "card.h"
 
 #define VACANT 0
 #define COMMERCIAL 1
@@ -16,8 +16,8 @@
 
 class Building {
 private:
-    static const double cost_ratio;
-    static const double rent_ratio;
+    const double cost_ratio = 1.4;
+    const double rent_ratio = 1.5;
 
     std::string name;
     int level = 0;
@@ -26,10 +26,15 @@ private:
     int owner = -1;
 public:
     Building(std::string name_, int init_upgrade_cost, int init_rent);
-    Building(Building&& other) noexcept ;
+
+    Building(Building &&other) noexcept;
+
     ~Building() = default;
+
     int get_cost() const;
+
     int get_rent() const;
+
     bool upgrade();
 };
 
@@ -37,7 +42,9 @@ class Land {
 private:
 public:
     int type;
+
     Land();
+
     ~Land() = default;
 };
 
@@ -46,18 +53,25 @@ private:
     int owner;
     Building *building;
 public:
-    explicit CLand(Building& building);
+    explicit CLand(Building &building);
+
     ~CLand() = default;
+
     void set_owner(int owner_id);
+
     void upgrade();
+
     int get_rent() const;
+
     int get_cost() const;
 };
 
 class FLand : public Land {
 private:
+    Card *card;
 public:
-    FLand();
+    explicit FLand(Card &card);
+
     ~FLand() = default;
 
 };
@@ -66,12 +80,16 @@ class Map {
 private:
     int size = 0;
     int seed = 0;
-    std::vector<Land*> map {};
+    std::vector<Land *> map{};
 public:
     Map() = default;
+
     Map(int size_, int seed, double c_prob, double f_prob);
-    Map(Map&& other) noexcept;
-    Map operator=(Map&& other);
+
+    Map(Map &&other) noexcept;
+
+    Map &operator=(Map &&other) noexcept;
+
     ~Map() = default;
 //    void spawn_player(int num);
 };

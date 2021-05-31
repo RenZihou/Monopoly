@@ -11,6 +11,7 @@ Config::Config() {
     std::ifstream cf("../conf/rules.json");
     json j;
     cf >> j;
+    cf.close();
     this->player_rules = {
             .init_fund = j.at("player").at("init_fund")
     };

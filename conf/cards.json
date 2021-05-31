@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Step One",
+    "description": "move forward one step and skip the roll",
+    "weight": 0.1
+  },
+  {
+    "name": "Step Three",
+    "description": "move forward three steps and skip the roll",
+    "weight": 0.9
+  }
+]
