@@ -26,23 +26,7 @@ private:
         double rent_ratio = 0;
     } building_rules;
 
-    Config() {
-        std::ifstream cf("..\\conf\\rules.json");
-        json j;
-        cf >> j;
-        this->player_rules = {
-                .init_fund = j.at("player").at("init_fund")
-        };
-        this->world_rules = {
-                .default_size = j.at("world").at("default_size"),
-                .CLand_prob = j.at("world").at("CLand_prob"),
-                .FLand_prob = j.at("world").at("FLand_prob")
-        };
-        this->building_rules = {
-                .cost_ratio = j.at("building").at("cost_ratio"),
-                .rent_ratio = j.at("building").at("rent_ratio")
-        };
-    };
+    Config();
 
 public:
     Config(const Config &) = delete;

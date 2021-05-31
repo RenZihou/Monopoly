@@ -7,6 +7,24 @@
 
 #include "config.h"
 
+Config::Config() {
+    std::ifstream cf("../conf/rules.json");
+    json j;
+    cf >> j;
+    this->player_rules = {
+            .init_fund = j.at("player").at("init_fund")
+    };
+    this->world_rules = {
+            .default_size = j.at("world").at("default_size"),
+            .CLand_prob = j.at("world").at("CLand_prob"),
+            .FLand_prob = j.at("world").at("FLand_prob")
+    };
+    this->building_rules = {
+            .cost_ratio = j.at("building").at("cost_ratio"),
+            .rent_ratio = j.at("building").at("rent_ratio")
+    };
+};
+
 double Config::get_player_rule(const std::string &name) const {
     if (name == "init_fund") return this->player_rules.init_fund;
     throw std::invalid_argument("Config Key Error at Config::get_player_rule");

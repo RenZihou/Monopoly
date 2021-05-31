@@ -20,13 +20,14 @@ private:
     static const double rent_ratio;
 
     std::string name;
-    int level;
-    int upgrade_cost;
-    int rent;
+    int level = 0;
+    int upgrade_cost = 0;
+    int rent = 0;
+    int owner = -1;
 public:
-    Building();
+    Building(std::string name_, int init_upgrade_cost, int init_rent);
+    Building(Building&& other) noexcept ;
     ~Building() = default;
-    void build(std::string name_, int init_upgrade_cost, int init_rent);
     int get_cost() const;
     int get_rent() const;
     bool upgrade();
@@ -43,9 +44,9 @@ public:
 class CLand : public Land {
 private:
     int owner;
-    Building building;
+    Building *building;
 public:
-    CLand();
+    explicit CLand(Building& building);
     ~CLand() = default;
     void set_owner(int owner_id);
     void upgrade();
@@ -63,13 +64,14 @@ public:
 
 class Map {
 private:
-    int size;
-    int seed;
-    std::vector<*Land> map;
+    int size = 0;
+    int seed = 0;
+    std::vector<Land*> map {};
 public:
     Map() = default;
     Map(int size_, int seed, double c_prob, double f_prob);
     Map(Map&& other) noexcept;
+    Map operator=(Map&& other);
     ~Map() = default;
 //    void spawn_player(int num);
 };
