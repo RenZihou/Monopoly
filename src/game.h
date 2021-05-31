@@ -31,7 +31,7 @@ public:
                const std::vector<std::string> &player_names);
 
 //    bool round();
-    void display() const;
+    static void display() ;
 
     static Game &game() {
         static Game game;

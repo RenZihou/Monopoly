@@ -3,14 +3,16 @@
 // @Author: RZH
 
 #include <cstdio>
+#include <string>
+#include <vector>
 #include "game.h"
 
 int main() {
     // DEBUG: begin
     int seed = 1;
     int world_size = 20;
-    int player = 1;
-    Game::game().setup(player, world_size, seed);
+    std::vector<std::string> player_names {"Player", "Alex", "Amiee"};
+    Game::game().setup(world_size, seed, player_names);
     // DEBUG: end
     return 0;
 }

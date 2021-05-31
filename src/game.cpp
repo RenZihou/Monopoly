@@ -32,6 +32,16 @@ void Game::setup(int world_size, int seed,
     }
 }
 
-void Game::display() const {
-    static int rows = 0;  // TODO: not finished
+/* TODO
+Idea GUI:
+-> [ 0][                         ] @Player
+|  [ 1][@Alex's housing_unit Lv.3]
+|  [ 2][Gives Random Card        ]
+
+...
+
+|  [28][                         ] @Alex
+-- [29][                         ]
+ */
+void Game::display() {
 }
