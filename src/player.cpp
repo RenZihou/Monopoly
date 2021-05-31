@@ -8,13 +8,9 @@
 #include <string>
 #include <utility>
 
-Player::Player(int id, std::string name, int init_pos, int init_fund) {
-    this->id = id;
-    this->name = std::move(name);
-    this->pos = init_pos;
-    this->fund = init_fund;
-    this->frozen = 0;
-}
+Player::Player(int id, std::string name, int init_pos, int init_fund) :
+        id(id), name(std::move(name)), pos(init_pos), spawn_pos(init_pos),
+        fund(init_fund) {}
 
 void Player::move_to(int new_pos) {
     this->pos = new_pos;

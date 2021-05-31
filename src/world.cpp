@@ -47,21 +47,14 @@ void from_json(const json &j, C &c) {
 //    this->rent = 0;
 //}
 
-Building::Building(std::string name_, int init_upgrade_cost, int init_rent) {
-    this->name = std::move(name_);
-    this->level = 0;
-    this->upgrade_cost = init_upgrade_cost;
-    this->rent = init_rent;
-    this->owner = -1;
-}
+Building::Building(std::string name, int init_upgrade_cost, int init_rent) :
+        name(std::move(name)), upgrade_cost(init_upgrade_cost),
+        rent(init_rent) {}
 
-Building::Building(Building &&other) noexcept {
-    this->name = std::move(other.name);
-    this->level = other.level;
-    this->upgrade_cost = other.upgrade_cost;
-    this->rent = other.rent;
-    this->owner = other.owner;
-}
+Building::Building(Building &&other) noexcept:
+        name(std::move(other.name)), level(other.level),
+        upgrade_cost(other.upgrade_cost),
+        rent(other.rent), owner(other.owner) {}
 
 int Building::get_cost() const {
     return this->upgrade_cost;
@@ -110,8 +103,8 @@ FLand::FLand(Card &card) {
     this->card = &card;
 }
 
-Map::Map(int size_, int seed, double c_prob, double f_prob) : size(size_),
-                                                              seed(seed) {
+Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
+                                                             seed(seed) {
     std::ifstream bf("../conf/buildings.json"),
             cf("../conf/cards.json");
     json buildings,
@@ -155,9 +148,8 @@ Map::Map(int size_, int seed, double c_prob, double f_prob) : size(size_),
     }
 }
 
-Map::Map(Map &&other) noexcept: size(other.size), seed(other.seed) {
-    this->map = std::move(other.map);
-}
+Map::Map(Map &&other) noexcept: size(other.size), seed(other.seed),
+                                map(std::move(other.map)) {}
 
 Map &Map::operator=(Map &&other) noexcept {
     this->size = other.size;

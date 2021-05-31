@@ -5,6 +5,7 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <string>
 #include <vector>
 
 #include "config.h"
@@ -13,17 +14,25 @@
 
 class Game {
 private:
-    std::vector<Player> players;
+    std::vector<Player *> players;
     Map map;
     Config *config = &Config::config();
+
     Game() = default;
+
 public:
-    Game(const Game&) = delete;
-    Game(Game&&) = delete;
+    Game(const Game &) = delete;
+
+    Game(Game &&) = delete;
+
     ~Game() = default;
-    void setup(int player_num, int world_size, int seed);
+
+    void setup(int world_size, int seed,
+               const std::vector<std::string> &player_names);
+
 //    bool round();
     void display() const;
+
     static Game &game() {
         static Game game;
         return game;

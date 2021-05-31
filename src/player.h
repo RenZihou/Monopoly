@@ -16,11 +16,12 @@ class Player {
 private:
     int id;
     std::string name;
+    int spawn_pos;
     int pos;
     int fund;
-    std::vector<Card> cards;
-    std::vector<Skill> skill;
-    int frozen;
+    std::vector<Card*> cards;
+    std::vector<Skill*> skill;
+    int frozen = 0;
 
 public:
     Player(int id, std::string name, int init_pos, int init_fund);

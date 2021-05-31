@@ -25,7 +25,7 @@ private:
     int rent = 0;
     int owner = -1;
 public:
-    Building(std::string name_, int init_upgrade_cost, int init_rent);
+    Building(std::string name, int init_upgrade_cost, int init_rent);
 
     Building(Building &&other) noexcept;
 
@@ -84,7 +84,7 @@ private:
 public:
     Map() = default;
 
-    Map(int size_, int seed, double c_prob, double f_prob);
+    Map(int size, int seed, double c_prob, double f_prob);
 
     Map(Map &&other) noexcept;
 
