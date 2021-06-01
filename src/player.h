@@ -26,7 +26,9 @@ private:
 public:
     Player(int id, std::string name, int init_pos, int init_fund);
     ~Player() = default;
-    void move_to(int new_pos);
+    int get_position() const;
+    std::string get_name() const;
+    void move(int steps);
     bool upd_fund(int add);
     bool buy_land(CLand &land);
     bool upd_land(CLand &land);

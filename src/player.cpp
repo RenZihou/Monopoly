@@ -12,9 +12,11 @@ Player::Player(int id, std::string name, int init_pos, int init_fund) :
         id(id), name(std::move(name)), pos(init_pos), spawn_pos(init_pos),
         fund(init_fund) {}
 
-void Player::move_to(int new_pos) {
-    this->pos = new_pos;
-}
+int Player::get_position() const { return this->pos; }
+
+std::string Player::get_name() const { return this-> name; }
+
+void Player::move(int steps) { this->pos += steps; }
 
 bool Player::upd_fund(int add) {
     this->fund += add;
