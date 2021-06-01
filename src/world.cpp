@@ -53,8 +53,7 @@ Building::Building(std::string name, int init_upgrade_cost, int init_rent) :
 
 Building::Building(Building &&other) noexcept:
         name(std::move(other.name)), level(other.level),
-        upgrade_cost(other.upgrade_cost),
-        rent(other.rent), owner(other.owner) {}
+        upgrade_cost(other.upgrade_cost), rent(other.rent) {}
 
 std::string Building::get_name() const { return this->name; }
 
@@ -73,7 +72,7 @@ bool Building::upgrade() {
 Land::Land() : type(VACANT) {}
 
 std::string Land::description() {
-    return "";
+    return "vacant land";
 }
 
 CLand::CLand(Building &building) : building(&building) {
@@ -81,13 +80,17 @@ CLand::CLand(Building &building) : building(&building) {
 }
 
 std::string CLand::description() {
-    if (this->owner == -1) {  // without owner
+    if (this->owner.id == -1) {  // without owner
         return "vacant commercial land";
     }
-//    return strcat("@", "[name]", "'s ", this->building.name);  // TODO
+    std::string des;
+    des = "@" + this->owner.name + "'s" + this->building->get_name();
+    return des;
 }
 
-void CLand::set_owner(int id) { this->owner = id; }
+void CLand::set_owner(int owner_id, const std::string &owner_name) {
+    this->owner = {owner_id, owner_name};
+}
 
 void CLand::upgrade() { this->building->upgrade(); }
 
@@ -96,6 +99,10 @@ int CLand::get_rent() const { return building->get_rent(); }
 int CLand::get_cost() const { return building->get_cost(); }
 
 FLand::FLand(Card &card) : card(&card) { this->type = FUNCTIONAL; }
+
+std::string FLand::description() {
+    return "gives " + this->card->get_name() + "card";
+}
 
 Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
                                                              seed(seed) {
@@ -151,3 +158,9 @@ Map &Map::operator=(Map &&other) noexcept {
     this->map = std::move(other.map);
     return *this;
 }
+
+std::vector<Land *>::iterator Map::begin() const { return this->map.begin(); }
+
+std::vector<Land *>::iterator Map::end() const { return this->map.end(); }
+
+int Map::get_size() const { return this->size; }

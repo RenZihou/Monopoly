@@ -23,7 +23,7 @@ private:
     int level = 0;
     int upgrade_cost = 0;
     int rent = 0;
-    int owner = -1;
+//    int owner = -1;
 public:
     Building(std::string name, int init_upgrade_cost, int init_rent);
 
@@ -54,8 +54,12 @@ public:
 
 class CLand : public Land {
 private:
-    int owner;
+    struct {
+        int id = -1;
+        std::string name;
+    } owner;
     Building *building;
+
 public:
     explicit CLand(Building &building);
 
@@ -63,7 +67,7 @@ public:
 
     std::string description() override;
 
-    void set_owner(int owner_id);
+    void set_owner(int owner_id, const std::string &owner_name);
 
     void upgrade();
 
@@ -98,7 +102,12 @@ public:
     Map &operator=(Map &&other) noexcept;
 
     ~Map() = default;
-//    void spawn_player(int num);
+
+    std::vector<Land *>::iterator begin() const;
+
+    std::vector<Land *>::iterator end() const;
+
+    int get_size() const;
 };
 
 #endif

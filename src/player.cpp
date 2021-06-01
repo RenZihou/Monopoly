@@ -23,7 +23,7 @@ bool Player::upd_fund(int add) {
 
 bool Player::buy_land(CLand &land) {
     if (this->fund >= land.get_cost()) {
-        land.set_owner(this->id);
+        land.set_owner(this->id, this->name);
         this->fund -= land.get_cost();
         return true;
     } else {

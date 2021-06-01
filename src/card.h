@@ -14,6 +14,8 @@ class Card {
 public:
     Card(std::string name, std::string description);
     ~Card() = default;
+
+    std::string get_name() const;
 };
 
 

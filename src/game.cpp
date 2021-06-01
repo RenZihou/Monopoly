@@ -46,4 +46,24 @@ Idea GUI:
 -- [29][                         ]
  */
 void Game::display() const {
+    std::vector<std::string> descriptions;
+    int size = this->map.get_size();
+    int d_width = 0;
+    int i_width = 0;
+    for (const auto & land : this->map) {
+        std::string des = land->description();
+        d_width = d_width > des.size() ? d_width : des.size();
+        descriptions.push_back(des);
+    }
+    int size_ = size;
+    while (size_) {
+        size_ /= 10;
+        ++i_width;
+    }
+    for (int i = 0; i < size; ++i) {
+        std::cout << "[" << std::right << std::setw(i_width) << i << "]";
+        std::cout << "[" << std::right << std::setw(d_width) << descriptions[i] << "]";
+        std::cout << "\n";
+    }
+    std::flush(std::cout);
 }
