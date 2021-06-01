@@ -16,10 +16,8 @@
 void Game::setup(int world_size, int seed,
                  const std::vector<std::string> &player_names) {
     // generate map
-    int CLand_prob = static_cast<int>(Config::config().get_world_rule(
-            "CLand_prob"));
-    int FLand_prob = static_cast<int>(Config::config().get_world_rule(
-            "FLand_prob"));
+    double CLand_prob = Config::config().get_world_rule("CLand_prob");
+    double FLand_prob = Config::config().get_world_rule("FLand_prob");
     this->map = std::move(Map(world_size, seed, CLand_prob, FLand_prob));
 
     // spawn players
@@ -45,14 +43,15 @@ Idea GUI:
 |  [28][                         ] @Alex
 -- [29][                         ]
  */
-void Game::display() const {
+void Game::display() {
     std::vector<std::string> descriptions;
     int size = this->map.get_size();
     int d_width = 0;
     int i_width = 0;
-    for (const auto & land : this->map) {
+    for (auto &land : this->map) {
         std::string des = land->description();
-        d_width = d_width > des.size() ? d_width : des.size();
+        int len = static_cast<int>(des.size());
+        d_width = d_width > len ? d_width : len;
         descriptions.push_back(des);
     }
     int size_ = size;
@@ -61,8 +60,9 @@ void Game::display() const {
         ++i_width;
     }
     for (int i = 0; i < size; ++i) {
-        std::cout << "[" << std::right << std::setw(i_width) << i << "]";
-        std::cout << "[" << std::right << std::setw(d_width) << descriptions[i] << "]";
+        std::cout << "[ " << std::right << std::setw(i_width) << i << " ]";
+        std::cout << "[ " << std::left << std::setw(d_width) << descriptions[i]
+                  << " ]";
         std::cout << "\n";
     }
     std::flush(std::cout);

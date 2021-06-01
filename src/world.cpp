@@ -101,7 +101,7 @@ int CLand::get_cost() const { return building->get_cost(); }
 FLand::FLand(Card &card) : card(&card) { this->type = FUNCTIONAL; }
 
 std::string FLand::description() {
-    return "gives " + this->card->get_name() + "card";
+    return "gives '" + this->card->get_name() + "' card";
 }
 
 Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
@@ -159,8 +159,8 @@ Map &Map::operator=(Map &&other) noexcept {
     return *this;
 }
 
-std::vector<Land *>::iterator Map::begin() const { return this->map.begin(); }
+std::vector<Land *>::iterator Map::begin() { return this->map.begin(); }
 
-std::vector<Land *>::iterator Map::end() const { return this->map.end(); }
+std::vector<Land *>::iterator Map::end() { return this->map.end(); }
 
 int Map::get_size() const { return this->size; }

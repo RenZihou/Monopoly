@@ -103,9 +103,9 @@ public:
 
     ~Map() = default;
 
-    std::vector<Land *>::iterator begin() const;
+    std::vector<Land *>::iterator begin();
 
-    std::vector<Land *>::iterator end() const;
+    std::vector<Land *>::iterator end();
 
     int get_size() const;
 };
