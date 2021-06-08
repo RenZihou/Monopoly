@@ -60,25 +60,27 @@ Game *Game::cycle(int player_id) {
     // execute instruction from player
 
     // check new land
-    Land *new_land = this->map[this->players[player_id]->get_position()];
-    if (new_land->get_type() == COMMERCIAL) {
-        // land is vacant
-        if (new_land->get_owner() != 0) {
-            // skip
+    Land *new_pos_ = this->map[this->players[player_id]->get_position()];
+    if (new_pos_->get_type() == COMMERCIAL) {
+        auto *new_pos = dynamic_cast<CLand *>(new_pos_);
+        if (new_pos->get_owner() == -1) {
+            // vacant land, buy or not
         }
-        else if (new_land->get_owner() != player_id) {
-            // buy or not
+        else if (new_pos->get_owner() == player_id) {
+            // player's land, upgrade or not
         } else {
-            // pay rent
-            int rent = new_land->get_rent();
+            // other's land, pay rent
+            int rent = new_pos->get_rent();
             this->players[player_id]->upd_fund(-rent);
-            this->players[new_land->get_owner()]->upd_fund(rent);
+            this->players[new_pos->get_owner()]->upd_fund(rent);
         }
-    } else if (new_land->get_type() == FUNCTIONAL) {}
+    } else if (new_pos_->get_type() == FUNCTIONAL) {}
+    return *this;
 }
 
 Game *Game::round() {
 
+    return *this;
 }
 
 void Game::display() {
