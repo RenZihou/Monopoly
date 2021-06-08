@@ -14,6 +14,7 @@
 #include <vector>
 #include <exception>
 
+
 void Game::move_player(int player_id, int steps) {
     int prev_pos = this->players[player_id]->get_position();
     this->players_pos.erase(prev_pos);
@@ -48,6 +49,38 @@ void Game::setup(int world_size, int seed,
     }
 }
 
+Game *Game::cycle(int player_id) {
+    // print the map and player info
+    this->display(player_id);
+
+    // player instruction
+    std::cout << "Make Your Decision! "
+              << "(type <r> for roll, <c> for card, <h> for help)\n";
+
+    // execute instruction from player
+
+    // check new land
+    Land *new_land = this->map[this->players[player_id]->get_position()];
+    if (new_land->get_type() == COMMERCIAL) {
+        // land is vacant
+        if (new_land->get_owner() != 0) {
+            // skip
+        }
+        else if (new_land->get_owner() != player_id) {
+            // buy or not
+        } else {
+            // pay rent
+            int rent = new_land->get_rent();
+            this->players[player_id].upd_fund(-rent)
+            this->players[new_land->get_owner()]->upd_fund(rent);
+        }
+    } else if (new_land->get_type() == FUNCTIONAL) {}
+}
+
+Game *Game::round() {
+
+}
+
 void Game::display() {
     std::vector<std::string> descriptions;
     int size = this->map.get_size();
@@ -67,8 +100,18 @@ void Game::display() {
         std::cout << "[ " << std::left << std::setw(d_width) << descriptions[i]
                   << " ]";
         if (this->players_pos.count(i))  // has player at this position
-            std::cout << " @" << this->players[this->players_pos[i]]->get_name();
+            std::cout << " @"
+                      << this->players[this->players_pos[i]]->get_name();
         std::cout << "\n";
     }
+    std::flush(std::cout);
+}
+
+void Game::display(int player_id) {
+    this->display();
+    std::cout << "\n==== CURRENT PLAYER: "
+              << this->players[player_id]->get_name() << " ====\n";
+    std::cout << "Your Fund: " << this->players[player_id]->get_fund() << "\n";
+    // TODO: print cards, skills
     std::flush(std::cout);
 }

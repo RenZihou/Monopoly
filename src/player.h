@@ -28,6 +28,7 @@ public:
     ~Player() = default;
     int get_position() const;
     std::string get_name() const;
+    int get_fund() const;
     void move(int steps);
     bool upd_fund(int add);
     bool buy_land(CLand &land);

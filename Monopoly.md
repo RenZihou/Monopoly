@@ -1,4 +1,4 @@
-# Monopoly
+### Monopoly
 
 ***
 
@@ -159,4 +159,21 @@ api of effects:
 
 ***
 
-## 
+## Game Running
+
+### A Cycle
+
+A cycle is a basic unit of the game. In each cycle, only one players would engage in the game (although this might change other players' propeties). 
+
+Here is what the game would do in a cycle:
+
+1. print the map, the current player's info (ie. fund, skill, available cards)
+2. waiting for player's decision: get a roll or use a card
+3. roll / using card and update player's position or fund (this may clear the console)
+4. do land functions (pay fund or buy land or give card)
+
+At the beginning of each cycle, the console would be cleared.
+
+### A Round
+
+A round is a sequence of cycles, during which each player plays a cycle (expect for skipping)

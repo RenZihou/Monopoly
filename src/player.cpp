@@ -14,7 +14,9 @@ Player::Player(int id, std::string name, int init_pos, int init_fund) :
 
 int Player::get_position() const { return this->pos; }
 
-std::string Player::get_name() const { return this-> name; }
+std::string Player::get_name() const { return this->name; }
+
+int Player::get_fund() const { return this->fund; }
 
 void Player::move(int steps) { this->pos += steps; }
 

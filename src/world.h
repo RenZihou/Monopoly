@@ -42,14 +42,17 @@ public:
 
 class Land {
 private:
-public:
+protected:
     int type;
+public:
+//    int type;
 
     Land();
 
     ~Land() = default;
 
     virtual std::string description();
+    int get_type() const;
 };
 
 class CLand : public Land {
@@ -67,13 +70,15 @@ public:
 
     std::string description() override;
 
+    int get_owner() const;
+    int get_rent() const;
+    int get_cost() const;
+
     void set_owner(int owner_id, const std::string &owner_name);
 
     void upgrade();
 
-    int get_rent() const;
 
-    int get_cost() const;
 };
 
 class FLand : public Land {
@@ -100,6 +105,8 @@ public:
     Map(Map &&other) noexcept;
 
     Map &operator=(Map &&other) noexcept;
+
+    Land *operator[](int index);
 
     ~Map() = default;
 

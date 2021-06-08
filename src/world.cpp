@@ -71,6 +71,8 @@ bool Building::upgrade() {
 
 Land::Land() : type(VACANT) {}
 
+int Land::get_type() const { return this->type; }
+
 std::string Land::description() {
     return "vacant land";
 }
@@ -88,15 +90,18 @@ std::string CLand::description() {
     return des;
 }
 
+int CLand::get_owner() const { return this->owner.id; }
+
+int CLand::get_rent() const { return this->building->get_rent(); }
+
+int CLand::get_cost() const { return this->building->get_cost(); }
+
 void CLand::set_owner(int owner_id, const std::string &owner_name) {
     this->owner = {owner_id, owner_name};
 }
 
 void CLand::upgrade() { this->building->upgrade(); }
 
-int CLand::get_rent() const { return building->get_rent(); }
-
-int CLand::get_cost() const { return building->get_cost(); }
 
 FLand::FLand(Card &card) : card(&card) { this->type = FUNCTIONAL; }
 
@@ -159,8 +164,13 @@ Map &Map::operator=(Map &&other) noexcept {
     return *this;
 }
 
+Land *Map::operator[](int index) {
+    return this->map[index];
+}
+
 std::vector<Land *>::iterator Map::begin() { return this->map.begin(); }
 
 std::vector<Land *>::iterator Map::end() { return this->map.end(); }
 
 int Map::get_size() const { return this->size; }
+

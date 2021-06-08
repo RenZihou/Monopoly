@@ -33,8 +33,10 @@ public:
     void setup(int world_size, int seed,
                const std::vector<std::string> &player_names);
 
-//    bool round();
+    Game* cycle(int player_id);
+    Game* round();
     void display();
+    void display(int player_id);
 
     static Game &game() {
         static Game game;
