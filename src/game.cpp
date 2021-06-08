@@ -71,7 +71,7 @@ Game *Game::cycle(int player_id) {
         } else {
             // pay rent
             int rent = new_land->get_rent();
-            this->players[player_id].upd_fund(-rent)
+            this->players[player_id]->upd_fund(-rent);
             this->players[new_land->get_owner()]->upd_fund(rent);
         }
     } else if (new_land->get_type() == FUNCTIONAL) {}
