@@ -25,20 +25,20 @@ bool Player::upd_fund(int add) {
     return this->fund > 0;
 }
 
-bool Player::buy_land(CLand &land) {
-    if (this->fund >= land.get_cost()) {
+bool Player::buy_land(CLand *land) {
+    if (this->fund >= land->get_cost()) {
         land.set_owner(this->id, this->name);
-        this->fund -= land.get_cost();
+        this->fund -= land->get_cost();
         return true;
     } else {
         return false;
     }
 }
 
-bool Player::upd_land(CLand &land) {
-    if (this->fund >= land.get_cost()) {
-        this->fund -= land.get_cost();
-        land.upgrade();
+bool Player::upd_land(CLand *land) {
+    if (this->fund >= land->get_cost()) {
+        this->fund -= land->get_cost();
+        land->upgrade();
         return true;
     } else {
         return false;

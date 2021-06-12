@@ -42,6 +42,8 @@ public:
         static Game game;
         return game;
     }
+
+    static int keyboard();
 };
 
 #endif

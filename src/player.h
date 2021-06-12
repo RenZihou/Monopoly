@@ -31,8 +31,8 @@ public:
     int get_fund() const;
     void move(int steps);
     bool upd_fund(int add);
-    bool buy_land(CLand &land);
-    bool upd_land(CLand &land);
+    bool buy_land(CLand *land);
+    bool upd_land(CLand *land);
     void use_card();
     void use_skill();
     void promote();
