@@ -15,17 +15,47 @@
 #include <exception>
 #include <termio.h>
 #include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <sstream>
 
 
-void Game::move_player(int player_id, int steps) {
+bool Game::_moveto(int player_id, int target) {
+    if (target >= this->map.get_size()) return false;
     Player *player = this->players[player_id];
     int prev_pos = player->get_position();
     this->players_pos.erase(prev_pos);
-    player->move(steps);
-    int new_pos = player->get_position();
-    if (this->players_pos.count(new_pos))
-        this->move_player(players_pos[new_pos], 1);
-    this->players_pos[new_pos] = player_id;
+    player->move_to(target);
+    if (this->players_pos.count(target))
+        this->_move(players_pos[target], 1);
+    this->players_pos[target] = player_id;
+    return true;
+}
+
+bool Game::_move(int player_id, int steps) {
+    Player *player = this->players[player_id];
+    int target = player->get_position() + steps;
+    target %= this->map.get_size();
+    this->_moveto(player_id, target);
+    return true;
+}
+
+bool Game::_buy(int player_id, int) {
+
+}
+
+bool Game::exec(std::vector<std::string> cmd) {
+    auto it = cmd.begin();
+    std::string name = *it;
+    if (name == "move") {
+        int player_id = std::stoi(*(++it));
+        int steps = std::stoi(*(++it));
+        return this->_move(player_id, steps);
+    } else if (name == "moveto") {
+        int player_id = std::stoi(*(++it));
+        int target = std::stoi(*(++it));
+        return this->_moveto(player_id, target);
+    }
 }
 
 void Game::setup(int world_size, int seed,
@@ -47,7 +77,7 @@ void Game::setup(int world_size, int seed,
     for (auto &name : player_names) {
         auto *new_player = new Player(player_id, name, 0, init_fund);
         this->players.push_back(new_player);
-        this->move_player(player_id, pos(mt));
+        this->_move(player_id, pos(mt));
         ++player_id;
     }
 }
@@ -60,23 +90,33 @@ Game *Game::cycle(int player_id) {
     // player instruction
     std::cout << "Make Your Decision! "
               << "(type <r> for roll, <c> for card, <h> for help)\n";
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<int> roll(1, 6);
-    switch (Game::keyboard()) {
-        case 'r':
-            // roll
-            player->move(roll(mt));
+    while (true) {
+        int key = Game::keyboard();
+        if (key == 'r') {  // roll to move
+            std::random_device rd;
+            std::mt19937 mt(rd());
+            std::uniform_int_distribution<int> roll(1, 6);
+            int steps = roll(mt);
+//            printf("You got a roll for point %d", steps);
+            this->_move(player_id, roll(mt));
             break;
-        case 'c':
-            // card
+        } else if (key == 'c') {  // TODO: use card
             break;
-        case 'h':
-            // help
-            printf("HELP HERE");  // TODO: manual
-        default:
-            // invalid input, go back to the input
-            ;
+        } else if (key == 'h') {  // TODO: print manual
+            break;
+        }
+#ifdef CHEAT_ON  // only available when CHEAT_ON flag is on
+        else if (key == '0') {  // cheat mode
+            std::string command;
+            std::vector<std::string> cmd;
+            std::cout << "> ";
+            getline(std::cin, command);
+            std::stringstream commandss(command);
+            while (commandss >> command) cmd.push_back(command);
+            this->exec(cmd);
+            break;
+        }
+#endif
     }
     this->display(player_id);
 

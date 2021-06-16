@@ -21,7 +21,11 @@ private:
     Config *config = &Config::config();
 
     Game() = default;
-    void move_player(int player_id, int steps);
+    // TODO: player_id -> player_name
+    bool _move(int player_id, int steps);
+    bool _moveto(int player_id, int target);
+    bool _buy(int player_id, int steps);
+    bool exec(std::vector<std::string> cmd);
 
 public:
     Game(const Game &) = delete;

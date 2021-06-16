@@ -7,6 +7,8 @@ find_package(nlohmann_json 3.9.1 REQUIRED)
 
 include_directories(src)
 
+add_definitions(-DCHEAT_ON)
+
 add_executable(proj
         src/card.cpp
         src/card.h

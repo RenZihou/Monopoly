@@ -29,7 +29,7 @@ public:
     int get_position() const;
     std::string get_name() const;
     int get_fund() const;
-    void move(int steps);
+    void move_to(int target);
     bool upd_fund(int add);
     bool buy_land(CLand *land);
     bool upd_land(CLand *land);

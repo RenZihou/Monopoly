@@ -9,11 +9,15 @@
 
 int main() {
     // DEBUG: begin
+#ifdef CHEAT_ON
+    printf("[Notice] Cheat mode is on!\n");
+#endif
     int seed = 1;
     int world_size = 20;
     std::vector<std::string> player_names {"Player", "Alex", "Amiee"};
     Game::game().setup(world_size, seed, player_names);
-    Game::game().display();
+//    Game::game().display();
+    Game::game().cycle(0);
     // DEBUG: end
     return 0;
 }

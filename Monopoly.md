@@ -1,5 +1,7 @@
 ### Monopoly
 
+[TOC]
+
 ***
 
 ## Game Rules
@@ -44,6 +46,13 @@ singleton
 4. check `land`
 5. 
 
+```c++
+class Game {
+    private:
+    // several functions to manipulate
+    void exec(std::vector<std::string>);
+};
+```
 ### Player
 
 ```c++
@@ -155,7 +164,12 @@ api of effects:
 ]
 ```
 
+***
 
+## Functions
+
+* `move <player_id> <steps>`
+* `moveto <player_id> <target>`
 
 ***
 
