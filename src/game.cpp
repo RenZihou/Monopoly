@@ -98,7 +98,7 @@ Game *Game::cycle(int player_id) {
             std::uniform_int_distribution<int> roll(1, 6);
             int steps = roll(mt);
 //            printf("You got a roll for point %d", steps);
-            this->_move(player_id, roll(mt));
+            this->_move(player_id, steps);
             break;
         } else if (key == 'c') {  // TODO: use card
             break;
@@ -121,34 +121,31 @@ Game *Game::cycle(int player_id) {
     this->display(player_id);
 
     // check new land
-    Land *new_pos_ = this->map[player->get_position()];
-    if (new_pos_->get_type() == COMMERCIAL) {
-        auto *new_pos = dynamic_cast<CLand *>(new_pos_);
-        if (new_pos->get_owner() == -1) {
+    Land *curr_land_ = this->map[player->get_position()];
+    if (curr_land_->get_type() == COMMERCIAL) {
+        auto *curr_land = dynamic_cast<CLand *>(curr_land_);
+        if (curr_land->get_owner() == -1) {
             // vacant land, buy or not
             std::cout << "You reached a vacant commercial land!"
                       << "(type <b> to buy it, <p> to do nothing)\n";
-            switch (Game::keyboard()) {
-                case 'b':
-                    if (player->buy_land(new_pos)) {
+            while (true) {
+                int key = Game::keyboard();
+                if (key == 'b') {
+                    if (player->buy_land(curr_land)) {
                         std::cout << "You bought it successfully!\n";
                     } else {
                         std::cout << "You have no enough money :(\n";
                     }
                     break;
-                case 'p':
-                    break;
-                default:
-                    // invalid input
-                    ;
+                } else if (key == 'p') break;
             }
-        } else if (new_pos->get_owner() == player_id) {
+        } else if (curr_land->get_owner() == player_id) {
             // player's land, upgrade or not
             std::cout << "You reached your own land!"
                       << "(type <u> to upgrade your building, <p> to do nothing\n";
             switch (Game::keyboard()) {
                 case 'u':
-                    if (player->upd_land(new_pos)) {
+                    if (player->upd_land(curr_land)) {
                         std::cout << "You upgraded it successfully!";
                     } else {
                         std::cout << "You have no enough money :(";
@@ -156,12 +153,12 @@ Game *Game::cycle(int player_id) {
             }
         } else {
             // other's land, pay rent
-            int rent = new_pos->get_rent();
+            int rent = curr_land->get_rent();
             player->upd_fund(-rent);
-            this->players[new_pos->get_owner()]->upd_fund(rent);
+            this->players[curr_land->get_owner()]->upd_fund(rent);
             // TODO: check broke
         }
-    } else if (new_pos_->get_type() == FUNCTIONAL) {}
+    } else if (curr_land->get_type() == FUNCTIONAL) {}
     return this;
 }
 
