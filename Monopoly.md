@@ -26,10 +26,11 @@
     * Transfer
 * Loss & Win:
   * Out if fund <= 0
-  * Once a player is broke, his / her buildings goes vacant while whose levels remains unchange
+  * Once a player is broke, his / her buildings goes vacant while whose levels remains unchanged
 * Other Rules:
-    * one player on each land at most (force previous player to move forward 1 step)
-    * 
+  * one player on each land at most (force previous player to move forward 1 step)
+  * each player will receive a small amount of fund at each of his / her round. The more buildings he / she owns, the
+    more money he / she receives.
 
 ***
 

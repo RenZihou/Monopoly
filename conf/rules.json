@@ -1,11 +1,13 @@
 {
   "player": {
-    "init_fund": 1500
+    "init_fund": 1500,
+    "bonus_fund": 50,
+    "buildings_bonus": 20
   },
   "world": {
     "default_size": 30,
     "CLand_prob": 0.7,
-    "FLand_prob": 0.25
+    "FLand_prob": 0.3
   },
   "building": {
     "cost_ratio": 3,

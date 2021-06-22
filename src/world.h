@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "card.h"
+#include "config.h"
 
 #define VACANT 0
 #define COMMERCIAL 1
@@ -16,8 +17,8 @@
 
 class Building {
 private:
-    const double cost_ratio = 1.4;
-    const double rent_ratio = 1.5;
+    const double cost_ratio = Config::config().get_building_rule("cost_ratio");
+    const double rent_ratio = Config::config().get_building_rule("rent_ratio");
 
     std::string name;
     int level = 0;

@@ -26,17 +26,30 @@ private:
 
 public:
     Player(int id, std::string name, int init_pos, int init_fund);
+
     ~Player() = default;
+
     int get_position() const;
+
     std::string get_name() const;
+
     int get_fund() const;
+
     void move_to(int target);
+
     bool upd_fund(int add);
+
     bool buy_land(CLand *land);
+
     bool upgrade_land(CLand *land);
-    void set_broke(bool status = true);
+
+    int freeze(int round = 0);
+
+//    void set_broke(bool status = true);
     void use_card();
+
     void use_skill();
+
     void promote();
 };
 

@@ -57,9 +57,8 @@ int Building::get_rent() const { return this->rent; }
 int Building::get_level() const { return this->level; }
 
 bool Building::upgrade() {
-    this->upgrade_cost = static_cast<int>(
-            this->upgrade_cost * Building::cost_ratio);
-    this->rent = static_cast<int>(this->rent * Building::rent);
+    this->upgrade_cost = static_cast<int>(this->upgrade_cost * this->cost_ratio);
+    this->rent = static_cast<int>(this->rent * this->rent_ratio);
     this->level += 1;
     return true;
 }

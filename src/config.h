@@ -25,6 +25,7 @@ private:
         double cost_ratio = 0;
         double rent_ratio = 0;
     } building_rules;
+    json conf;
 
     Config();
 

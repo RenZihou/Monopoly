@@ -32,6 +32,10 @@ private:
 
     bool _setfund(int player_id, int new_fund);
 
+    bool _addfund(int player_id, int add);
+
+    bool _freeze(int player_id, int round);
+
     bool exec(std::vector<std::string> cmd);
 
 public:

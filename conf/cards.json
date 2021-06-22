@@ -2,11 +2,67 @@
   {
     "name": "Step One",
     "description": "move forward one step and skip the roll",
-    "weight": 0.1
+    "weight": 0.2,
+    "effect": [
+      "move <p> 1"
+    ],
+    "condition": [
+      "roll"
+    ]
   },
   {
     "name": "Step Three",
     "description": "move forward three steps and skip the roll",
-    "weight": 0.9
+    "weight": 0.2,
+    "effect": [
+      "move <p> 3"
+    ],
+    "condition": [
+      "roll"
+    ]
+  },
+  {
+    "name": "Take Over",
+    "description": "take over current building",
+    "weight": 0.2,
+    "effect": [
+      "setowner <l> <p>"
+    ],
+    "condition": [
+      "rent"
+    ]
+  },
+  {
+    "name": "Freeze",
+    "description": "you cannot move for 3 rounds",
+    "weight": 0.15,
+    "effect": [
+      "freeze <p> 3"
+    ],
+    "condition": [
+      "instant"
+    ]
+  },
+  {
+    "name": "Revive",
+    "description": "revive when go broke and have 500 fund",
+    "weight": 0.1,
+    "effect": [
+      "setfund <p> 500"
+    ],
+    "condition": [
+      "broke"
+    ]
+  },
+  {
+    "name": "Lucky Fund",
+    "description": "give you lucky fund",
+    "weight": 0.15,
+    "effect": [
+      "addfund <p> 1288"
+    ],
+    "condition": [
+      "instant"
+    ]
   }
 ]

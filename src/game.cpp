@@ -41,7 +41,7 @@ bool Game::_move(int player_id, int steps) {
 }
 
 bool Game::_setowner(int pos, int player_id) {
-    CLand *land = dynamic_cast<CLand *>(this->map[pos]);
+    auto land = dynamic_cast<CLand *>(this->map[pos]);
     land->set_owner(player_id, this->players[player_id]->get_name());
     return true;
 }
@@ -50,6 +50,16 @@ bool Game::_setfund(int player_id, int new_fund) {
     Player *player = this->players[player_id];
     int add = new_fund - player->get_fund();
     player->upd_fund(add);
+    return true;
+}
+
+bool Game::_addfund(int player_id, int add) {
+    this->players[player_id]->upd_fund(add);
+    return true;
+}
+
+bool Game::_freeze(int player_id, int round) {
+    this->players[player_id]->freeze(round);
     return true;
 }
 
@@ -72,6 +82,14 @@ bool Game::exec(std::vector<std::string> cmd) {
         int pos = std::stoi(*(++it));
         int player_id = std::stoi(*(++it));
         return this->_setowner(pos, player_id);
+    } else if (name == "addfund") {
+        int player_id = std::stoi(*(++it));
+        int add = std::stoi(*(++it));
+        return this->_addfund(player_id, add);
+    } else if (name == "freeze") {
+        int player_id = std::stoi(*(++it));
+        int round = std::stoi(*(++it));
+        return this->_freeze(player_id, round);
     }
     return true;
 }
@@ -190,7 +208,10 @@ Game *Game::run() {
     int player_id = 0;
     int tot_player = static_cast<int>(this->players.size());
     while (this->alive > 1) {
-        if (this->players[player_id] != nullptr) this->cycle(player_id);
+        if (this->players[player_id] != nullptr) {
+            if (!this->players[player_id]->freeze()) this->cycle(player_id);
+            else this->players[player_id]->freeze(-1);
+        }
 
 //        for (auto &player : players) {
         for (int pid = 0; pid < tot_player; ++pid) {
