@@ -40,9 +40,6 @@ bool Game::_move(int player_id, int steps) {
     return true;
 }
 
-bool Game::_buy(int player_id, int) {
-
-}
 
 bool Game::exec(std::vector<std::string> cmd) {
     auto it = cmd.begin();
@@ -56,6 +53,7 @@ bool Game::exec(std::vector<std::string> cmd) {
         int target = std::stoi(*(++it));
         return this->_moveto(player_id, target);
     }
+    return true;
 }
 
 void Game::setup(int world_size, int seed,
@@ -69,6 +67,7 @@ void Game::setup(int world_size, int seed,
     this->map = std::move(Map(world_size, seed, CLand_prob, FLand_prob));
 
     // spawn players
+    this->alive = static_cast<int>(player_names.size());
     int init_fund = static_cast<int>(Config::config().get_player_rule(
             "init_fund"));
     int player_id = 0;
@@ -143,27 +142,49 @@ Game *Game::cycle(int player_id) {
             // player's land, upgrade or not
             std::cout << "You reached your own land!"
                       << "(type <u> to upgrade your building, <p> to do nothing\n";
-            switch (Game::keyboard()) {
-                case 'u':
-                    if (player->upd_land(curr_land)) {
-                        std::cout << "You upgraded it successfully!";
+            while (true) {
+                int key = Game::keyboard();
+                if (key == 'u') {
+                    if (player->upgrade_land(curr_land)) {
+                        std::cout << "You upgraded it successfully!\n";
                     } else {
-                        std::cout << "You have no enough money :(";
+                        std::cout << "You have no enough money :(\n";
                     }
+                    break;
+                } else if (key == 'p') break;
             }
         } else {
             // other's land, pay rent
             int rent = curr_land->get_rent();
-            player->upd_fund(-rent);
             this->players[curr_land->get_owner()]->upd_fund(rent);
-            // TODO: check broke
+            if (!player->upd_fund(-rent)) {
+                // go broke
+                std::cout << "You are broke!\n";
+//                player->set_broke();
+                this->players[player_id] = nullptr;
+                // remove player from position list
+                for (auto it = this->players_pos.begin();
+                     it != this->players_pos.end(); ++it) {
+                    if (it->second == player_id) {
+                        this->players_pos.erase(it);
+                        break;
+                    }
+                }
+                // TODO: death player's land
+            }
         }
-    } else if (curr_land->get_type() == FUNCTIONAL) {}
+    } else if (curr_land_->get_type() == FUNCTIONAL) {}
     return this;
 }
 
-Game *Game::round() {
-
+Game *Game::run() {
+    int player_id = 0;
+    while (this->alive > 1) {
+        this->cycle(player_id);
+        // TODO: check broke
+        player_id += 1;
+        player_id %= static_cast<int>(this->players.size());
+    }
     return this;
 }
 

@@ -35,7 +35,7 @@ bool Player::buy_land(CLand *land) {
     }
 }
 
-bool Player::upd_land(CLand *land) {
+bool Player::upgrade_land(CLand *land) {
     if (this->fund >= land->get_cost()) {
         this->fund -= land->get_cost();
         land->upgrade();
@@ -43,4 +43,8 @@ bool Player::upd_land(CLand *land) {
     } else {
         return false;
     }
+}
+
+void Player::set_broke(bool status /* = true */) {
+    this->broke = status;
 }

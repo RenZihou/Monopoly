@@ -22,6 +22,7 @@ private:
     std::vector<Card*> cards;
     std::vector<Skill*> skill;
     int frozen = 0;
+    bool broke = false;
 
 public:
     Player(int id, std::string name, int init_pos, int init_fund);
@@ -32,7 +33,8 @@ public:
     void move_to(int target);
     bool upd_fund(int add);
     bool buy_land(CLand *land);
-    bool upd_land(CLand *land);
+    bool upgrade_land(CLand *land);
+    void set_broke(bool status = true);
     void use_card();
     void use_skill();
     void promote();

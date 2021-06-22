@@ -15,6 +15,7 @@
 
 class Game {
 private:
+    int alive = 0;
     std::vector<Player *> players;
     std::unordered_map<int, int> players_pos;  // {pos, player_id}
     Map map;
@@ -38,7 +39,7 @@ public:
                const std::vector<std::string> &player_names);
 
     Game* cycle(int player_id);
-    Game* round();
+    Game* run();
     void display();
     void display(int player_id);
 

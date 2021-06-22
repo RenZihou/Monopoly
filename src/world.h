@@ -64,7 +64,7 @@ private:
     Building *building;
 
 public:
-    explicit CLand(Building &building);
+    explicit CLand(Building *building);
 
     ~CLand() = default;
 
@@ -85,7 +85,7 @@ class FLand : public Land {
 private:
     Card *card;
 public:
-    explicit FLand(Card &card);
+    explicit FLand(Card *card);
 
     ~FLand() = default;
 

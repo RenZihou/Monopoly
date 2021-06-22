@@ -40,13 +40,6 @@ void from_json(const json &j, C &c) {
     j.at("weight").get_to(c.weight);
 }
 
-//Building::Building() {
-//    this->name = "";
-//    this->level = 0;
-//    this->upgrade_cost = 0;
-//    this->rent = 0;
-//}
-
 Building::Building(std::string name, int init_upgrade_cost, int init_rent) :
         name(std::move(name)), upgrade_cost(init_upgrade_cost),
         rent(init_rent) {}
@@ -62,8 +55,8 @@ int Building::get_cost() const { return this->upgrade_cost; }
 int Building::get_rent() const { return this->rent; }
 
 bool Building::upgrade() {
-    this->upgrade_cost = static_cast<int>(this->upgrade_cost *
-                                          Building::cost_ratio);
+    this->upgrade_cost = static_cast<int>(
+            this->upgrade_cost * Building::cost_ratio);
     this->rent = static_cast<int>(this->rent * Building::rent);
     this->level += 1;
     return true;
@@ -73,20 +66,19 @@ Land::Land() : type(VACANT) {}
 
 int Land::get_type() const { return this->type; }
 
-std::string Land::description() {
-    return "vacant land";
-}
+std::string Land::description() { return "vacant land"; }
 
-CLand::CLand(Building &building) : building(&building) {
+CLand::CLand(Building *building) : building(building) {
     this->type = COMMERCIAL;
 }
 
 std::string CLand::description() {
-    if (this->owner.id == -1) {  // without owner
-        return "vacant commercial land";
-    }
     std::string des;
-    des = "@" + this->owner.name + "'s" + this->building->get_name();
+    if (this->owner.id == -1) {  // without owner
+        des = "vacant " + this->building->get_name();
+    } else {
+        des = "@" + this->owner.name + "'s " + this->building->get_name();
+    }
     return des;
 }
 
@@ -103,10 +95,11 @@ void CLand::set_owner(int owner_id, const std::string &owner_name) {
 void CLand::upgrade() { this->building->upgrade(); }
 
 
-FLand::FLand(Card &card) : card(&card) { this->type = FUNCTIONAL; }
+FLand::FLand(Card *card) : card(card) { this->type = FUNCTIONAL; }
 
 std::string FLand::description() {
-    return "gives '" + this->card->get_name() + "' card";
+//    return "gives '" + this->card->get_name() + "' card";
+    return "FLand";  // TODO
 }
 
 Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
@@ -133,18 +126,23 @@ Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
             double b = dist(map_gen);
             double accu_prob = 0;  // accumulate probability
             for (const auto &bd : bd_list) {
-                if (b < (accu_prob += bd.weight)) {  // create bd type CLand
-                    Building new_bd{bd.name, bd.build_cost, bd.rent};
+                accu_prob += bd.weight;
+                if (b < accu_prob) {  // create bd type CLand
+                    auto new_bd = new Building{
+                            bd.name, bd.build_cost, bd.rent};
                     new_land = new CLand(new_bd);
+                    break;
                 }
             }
         } else if (r < (c_prob + f_prob)) { // create functional land
             double b = dist(map_gen);
             double accu_prob = 0;
             for (const auto &c : c_list) {
-                if (b < (accu_prob += c.weight)) {  // create c type FLand
-                    Card new_card(c.name, c.description);
+                accu_prob += c.weight;
+                if (b < accu_prob) {  // create c type FLand
+                    auto new_card = new Card{c.name, c.description};
                     new_land = new FLand(new_card);
+                    break;
                 }
             }
         } else {  // create vacant land
