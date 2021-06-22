@@ -40,6 +40,18 @@ bool Game::_move(int player_id, int steps) {
     return true;
 }
 
+bool Game::_setowner(int pos, int player_id) {
+    CLand *land = dynamic_cast<CLand *>(this->map[pos]);
+    land->set_owner(player_id, this->players[player_id]->get_name());
+    return true;
+}
+
+bool Game::_setfund(int player_id, int new_fund) {
+    Player *player = this->players[player_id];
+    int add = new_fund - player->get_fund();
+    player->upd_fund(add);
+    return true;
+}
 
 bool Game::exec(std::vector<std::string> cmd) {
     auto it = cmd.begin();
@@ -52,6 +64,14 @@ bool Game::exec(std::vector<std::string> cmd) {
         int player_id = std::stoi(*(++it));
         int target = std::stoi(*(++it));
         return this->_moveto(player_id, target);
+    } else if (name == "setfund") {
+        int player_id = std::stoi(*(++it));
+        int fund = std::stoi(*(++it));
+        return this->_setfund(player_id, fund);
+    } else if (name == "setowner") {
+        int pos = std::stoi(*(++it));
+        int player_id = std::stoi(*(++it));
+        return this->_setowner(pos, player_id);
     }
     return true;
 }
@@ -106,13 +126,16 @@ Game *Game::cycle(int player_id) {
         }
 #ifdef CHEAT_ON  // only available when CHEAT_ON flag is on
         else if (key == '0') {  // cheat mode
-            std::string command;
-            std::vector<std::string> cmd;
-            std::cout << "> ";
-            getline(std::cin, command);
-            std::stringstream commandss(command);
-            while (commandss >> command) cmd.push_back(command);
-            this->exec(cmd);
+            while (true) {
+                std::string command;
+                std::vector<std::string> cmd;
+                std::cout << "> ";
+                getline(std::cin, command);
+                std::stringstream commandss(command);
+                while (commandss >> command) cmd.push_back(command);
+                if (cmd[0] == "quit") break;
+                else this->exec(cmd);
+            }
             break;
         }
 #endif
@@ -165,20 +188,48 @@ Game *Game::cycle(int player_id) {
 
 Game *Game::run() {
     int player_id = 0;
+    int tot_player = static_cast<int>(this->players.size());
     while (this->alive > 1) {
         if (this->players[player_id] != nullptr) this->cycle(player_id);
-        for (auto &player : players) {
+
+//        for (auto &player : players) {
+        for (int pid = 0; pid < tot_player; ++pid) {
+            Player *player = this->players[pid];
             if (player != nullptr && player->get_fund() < 0) {
                 std::cout << player->get_name() << " goes broke!\n";
                 // remove death player from position list
+                for (auto it = this->players_pos.begin();
+                     it != this->players_pos.end(); ++it) {
+                    if (it->second == pid) {
+                        this->players_pos.erase(it);
+                        break;
+                    }
+                }
                 // deal with death player's houses
-                player = nullptr;
+                for (auto &land_ : this->map) {
+                    if (land_->get_type() == COMMERCIAL) {
+                        auto land = dynamic_cast<CLand *>(land_);
+                        if (land->get_owner() == pid) {
+                            land->set_owner(-1, "");
+                        }
+                    }
+                }
+                this->players[pid] = nullptr;
+                --this->alive;
             }
         }
-        // TODO: check broke
         player_id += 1;
-        player_id %= static_cast<int>(this->players.size());
+        player_id %= tot_player;
     }
+
+    std::string winner_name;
+    for (auto player : this->players) {
+        if (player != nullptr) winner_name = player->get_name();
+    }
+    system("clear");
+    this->display();
+    std::cout << "\n@" << winner_name << " is the winner! :)\n";
+    std::flush(std::cout);
     return this;
 }
 
@@ -198,6 +249,15 @@ void Game::display() {
         if (!i) std::cout << "-->";
         else if (i == size - 1) std::cout << "---";
         else std::cout << "|  ";
+#ifdef LAND_NUMBER
+        int size_ = this->map.get_size();
+        int width_ = 0;
+        while (size_) {
+            size_ /= 10;
+            ++width_;
+        }
+        std::cout << "[" << std::right << std::setw(width_) << i << "]";
+#endif
         std::cout << "[ " << std::left << std::setw(d_width) << descriptions[i]
                   << " ]";
         if (this->players_pos.count(i))  // has player at this position

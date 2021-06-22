@@ -54,6 +54,8 @@ int Building::get_cost() const { return this->upgrade_cost; }
 
 int Building::get_rent() const { return this->rent; }
 
+int Building::get_level() const { return this->level; }
+
 bool Building::upgrade() {
     this->upgrade_cost = static_cast<int>(
             this->upgrade_cost * Building::cost_ratio);
@@ -74,10 +76,12 @@ CLand::CLand(Building *building) : building(building) {
 
 std::string CLand::description() {
     std::string des;
+    std::string bd_info = this->building->get_name() + " (Lv." +
+                          std::to_string(this->building->get_level()) + ")";
     if (this->owner.id == -1) {  // without owner
-        des = "vacant " + this->building->get_name();
+        des = "vacant " + bd_info;
     } else {
-        des = "@" + this->owner.name + "'s " + this->building->get_name();
+        des = "@" + this->owner.name + "'s " + bd_info;
     }
     return des;
 }

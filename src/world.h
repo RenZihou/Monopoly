@@ -37,6 +37,8 @@ public:
 
     int get_rent() const;
 
+    int get_level() const;
+
     bool upgrade();
 };
 

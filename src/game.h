@@ -22,10 +22,16 @@ private:
     Config *config = &Config::config();
 
     Game() = default;
+
     // TODO: player_id -> player_name
     bool _move(int player_id, int steps);
+
     bool _moveto(int player_id, int target);
-    bool _buy(int player_id, int steps);
+
+    bool _setowner(int pos, int player_id);
+
+    bool _setfund(int player_id, int new_fund);
+
     bool exec(std::vector<std::string> cmd);
 
 public:

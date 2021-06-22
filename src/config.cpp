@@ -13,8 +13,7 @@ Config::Config() {
     cf >> j;
     cf.close();
     this->player_rules = {
-            .init_fund = j.at("player").at("init_fund"),
-            .inherit_land_prob = j.at("player").at("inherit_land_prob")
+            .init_fund = j.at("player").at("init_fund")
     };
     this->world_rules = {
             .default_size = j.at("world").at("default_size"),
@@ -29,7 +28,6 @@ Config::Config() {
 
 double Config::get_player_rule(const std::string &name) const {
     if (name == "init_fund") return this->player_rules.init_fund;
-    if (name == "inherit_land_prob") return tis->player_rules.inherit_land_prob;
     throw std::invalid_argument("Config Key Error at Config::get_player_rule");
 }
 

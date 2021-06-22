@@ -1,7 +1,6 @@
 {
   "player": {
-    "init_fund": 1500,
-    "inherit_land_prob": 1
+    "init_fund": 1500
   },
   "world": {
     "default_size": 30,
