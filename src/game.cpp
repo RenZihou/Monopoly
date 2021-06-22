@@ -157,21 +157,7 @@ Game *Game::cycle(int player_id) {
             // other's land, pay rent
             int rent = curr_land->get_rent();
             this->players[curr_land->get_owner()]->upd_fund(rent);
-            if (!player->upd_fund(-rent)) {
-                // go broke
-                std::cout << "You are broke!\n";
-//                player->set_broke();
-                this->players[player_id] = nullptr;
-                // remove player from position list
-                for (auto it = this->players_pos.begin();
-                     it != this->players_pos.end(); ++it) {
-                    if (it->second == player_id) {
-                        this->players_pos.erase(it);
-                        break;
-                    }
-                }
-                // TODO: death player's land
-            }
+            player->upd_fund(-rent);
         }
     } else if (curr_land_->get_type() == FUNCTIONAL) {}
     return this;
@@ -180,7 +166,15 @@ Game *Game::cycle(int player_id) {
 Game *Game::run() {
     int player_id = 0;
     while (this->alive > 1) {
-        this->cycle(player_id);
+        if (this->players[player_id] != nullptr) this->cycle(player_id);
+        for (auto &player : players) {
+            if (player != nullptr && player->get_fund() < 0) {
+                std::cout << player->get_name() << " goes broke!\n";
+                // remove death player from position list
+                // deal with death player's houses
+                player = nullptr;
+            }
+        }
         // TODO: check broke
         player_id += 1;
         player_id %= static_cast<int>(this->players.size());
