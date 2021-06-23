@@ -48,7 +48,8 @@
     "description": "revive when go broke and have 500 fund",
     "weight": 0.1,
     "effect": [
-      "setfund ~ 500"
+      "revive",
+      "addfund ~ 500"
     ],
     "condition": [
       "broke"

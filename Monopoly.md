@@ -1,10 +1,12 @@
-### Monopoly
+# Monopoly
 
 [TOC]
 
 ***
 
 ## Game Rules
+
+### Basic Rules
 
 * Initial Funds: 1500 / player
 * Rules of Moving: roll / strategy card
@@ -25,12 +27,20 @@
     * Promotion
     * Transfer
 * Loss & Win:
-  * Out if fund <= 0
-  * Once a player is broke, his / her buildings goes vacant while whose levels remains unchanged
+    * Out if fund <= 0
+    * Once a player is broke, his / her buildings goes vacant while whose levels remains unchanged
 * Other Rules:
-  * one player on each land at most (force previous player to move forward 1 step)
-  * each player will receive a small amount of fund at each of his / her round. The more buildings he / she owns, the
-    more money he / she receives.
+    * one player on each land at most (force previous player to move forward 1 step)
+    * each player will receive a small amount of fund at each of his / her round. The more buildings he / she owns, the
+      more money he / she receives.
+
+### About Strategy Cards
+
+The only legal way to obtain a strategy card (*card for short*) is through reaching a functional land.
+
+Each functional land gives a certain type of card. These cards have various effects and use conditions.
+
+A passive card can only be activated when certain condition is triggerred.
 
 ***
 
@@ -46,27 +56,28 @@ singleton
 2. roll or use card
 3. update `pos`
 4. check `land`
-5. 
+5.
 
 ```c++
 class Game {
-    private:
-    // several functions to manipulate
-    void exec(std::vector<std::string>);
+private:
+// several functions to manipulate
+void exec(std::vector<std::string>);
 };
 ```
+
 ### Player
 
 ```c++
 class Player {
-    string name;
-    int fund;
-    int spwan_pos;
-    int pos;
-    int xp;
-    vector<Building> buildings;
-    vector<Card> cards;
-    Skill skill;
+string name;
+int fund;
+int spwan_pos;
+int pos;
+int xp;
+vector<Building> buildings;
+vector<Card> cards;
+Skill skill;
 };
 ```
 
@@ -75,22 +86,25 @@ class Player {
 #### Land
 
 ```c++
-#define EMPTY 0
-#define COMMERCIAL 1
-#define FUNCTIONAL 2
+#define
+EMPTY 0
+#define
+COMMERCIAL 1
+#define
+FUNCTIONAL 2
 
 class Land {
-    // int type;
+// int type;
 };
 
 class CommercialLand : Land {
-    int owner;
-    Building building;
-    int level;
+int owner;
+Building building;
+int level;
 };
 
 class FunctionalLand : Land {
-    int function;
+int function;
 };
 ```
 
@@ -98,19 +112,19 @@ class FunctionalLand : Land {
 
 ```c++
 class Map {
-    int size;
-    vector<Land> map;
+int size;
+vector<Land> map;
 };
 ```
 
-### Building
+#### Building
 
 ```c++
 class Building {
-    string name;
-    int max_level;
-    vector<int> upgrade_costs;
-    vector<int> rents;
+string name;
+int max_level;
+vector<int> upgrade_costs;
+vector<int> rents;
 }
 ```
 
@@ -125,29 +139,17 @@ class Building {
 
 use config file (``.json`)
 
-api of effects:
-
-* `step [s/o] <n>`: move forward by `n` steps (`n` can be negative)
-* `earn <s/o> <c>`: increase fund by `c` units (`c` can be negative)
-* `freeze <s/o> <r>`: freeze player for `r` rounds (`r` must be positive)
-* `free <r>`: free of rents for `r` rounds
-* : pay `r` times rents
-* `destroy`: destroy the current building
-* `loot`: change the owner of current building to the card user
-* `upgrade`: upgrade current building by 1 level
-* `teleport [s/o] <p>`: teleport player to a random position
-
 #### Strategy Card
 
 ```json
 [
-    {
-        "name": "1-step move",
-        "description": "move one step forward and skip the roll",
-        "effect": "",
-        "skip_roll": true,
-        "weight": 0.1
-    }
+  {
+    "name": "1-step move",
+    "description": "move one step forward and skip the roll",
+    "effect": [],
+    "condition": [],
+    "weight": 0.1
+  }
 ]
 ```
 
@@ -155,14 +157,14 @@ api of effects:
 
 ```json
 [
-    {
-        "name": "roll twice",
-        "description": "",
-        "maxLv": 3,
-        "effect": [],
-        "coolDown": [],
-        "weight": 0.1
-    }
+  {
+    "name": "roll twice",
+    "description": "",
+    "maxLv": 3,
+    "effect": [],
+    "coolDown": [],
+    "weight": 0.1
+  }
 ]
 ```
 
@@ -179,7 +181,8 @@ api of effects:
 
 ### A Cycle
 
-A cycle is a basic unit of the game. In each cycle, only one players would engage in the game (although this might change other players' propeties). 
+A cycle is a basic unit of the game. In each cycle, only one players would engage in the game (although this might
+change other players' propeties).
 
 Here is what the game would do in a cycle:
 

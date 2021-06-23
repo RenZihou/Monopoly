@@ -3,21 +3,16 @@
 // @Author: RZH
 
 #include "game.h"
-//#include "world.h"
-//#include "config.h"
-//#include "player.h"
 
 #include <iostream>
 #include <iomanip>
 #include <random>
-//#include <utility>
 #include <vector>
 #include <exception>
 #include <termio.h>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
-#include <sstream>
 
 
 bool Game::_moveto(int player_id, int target) {
@@ -151,6 +146,18 @@ Game *Game::cycle(int player_id) {
             this->_move(player_id, steps);
             break;
         } else if (key == 'c') {  // TODO: use card
+            std::vector<Card *> available;
+            for (auto &card : player->get_cards()) {
+                if (card->has_condition("roll")) available.push_back(card);
+            }
+            // list available cards
+            // Game::display_cards(available);
+            while (true) {
+                int key_ = Game::keyboard();
+//                if (key == "");
+                break;
+            }
+            // player->use_card();
             break;
         } else if (key == 'h') {  // TODO: print manual
             break;
@@ -164,7 +171,6 @@ Game *Game::cycle(int player_id) {
                 if (command == "quit") break;
                 else this->exec(command);
             }
-            break;
         }
 #endif
     }
@@ -235,7 +241,23 @@ Game *Game::run() {
 //        for (auto &player : players) {
         for (int pid = 0; pid < tot_player; ++pid) {
             Player *player = this->players[pid];
+            bool revive_flag = false;
             if (player != nullptr && player->get_fund() < 0) {
+                // check for revive card
+                this->context.curr_player = pid;
+                this->context.curr_land = player->get_position();
+                for (auto &card : player->get_cards()) {
+                    if (card->has_condition("broke")) {
+                        for (const auto &effect : card->get_effect())
+                            if (effect == "revive") {
+                                revive_flag = true;
+                                if (player->get_fund() < 0) this->exec("setfund ~ 0");
+                            } else this->exec(effect);
+                        player->remove_card(card);
+                    }
+                }
+                if (revive_flag) continue;
+                // TODO: display opt
                 std::cout << player->get_name() << " goes broke!\n";
                 // remove death player from position list
                 for (auto it = this->players_pos.begin();
@@ -302,7 +324,10 @@ void Game::display() {
                   << " ]";
         if (this->players_pos.count(i))  // has player at this position
             std::cout << " @"
-                      << this->players[this->players_pos[i]]->get_name();
+                      << this->players[this->players_pos[i]]->get_name()
+                      << " ($"
+                      << this->players[this->players_pos[i]]->get_fund()
+                      << ")";
         std::cout << "\n";
     }
     std::flush(std::cout);

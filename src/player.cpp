@@ -53,3 +53,16 @@ int Player::freeze(int round /* = 0 */) {
 void Player::add_card(Card *card) {
     this->cards.push_back(card);
 }
+
+std::vector<Card *> Player::get_cards() const {
+    return this->cards;
+}
+
+void Player::remove_card(Card *card) {
+    for (auto it = this->cards.begin(); it != this->cards.end(); ++it) {
+        if (*it == card) {
+            this->cards.erase(it);
+            break;
+        }
+    }
+}

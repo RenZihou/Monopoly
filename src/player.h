@@ -46,7 +46,9 @@ public:
 
     void add_card(Card *card);
 
-    void use_card();
+    std::vector<Card *> get_cards() const;
+
+    void remove_card(Card *card);
 
     void use_skill();
 
