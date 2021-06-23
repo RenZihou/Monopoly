@@ -20,6 +20,10 @@ private:
     std::unordered_map<int, int> players_pos;  // {pos, player_id}
     Map map;
     Config *config = &Config::config();
+    struct {
+        int curr_player = 0;
+        int curr_land = 0;
+    } context;
 
     Game() = default;
 
@@ -36,7 +40,7 @@ private:
 
     bool _freeze(int player_id, int round);
 
-    bool exec(std::vector<std::string> cmd);
+    bool exec(std::string cmd);
 
 public:
     Game(const Game &) = delete;

@@ -6,16 +6,26 @@
 #define CARD_H_
 
 #include <string>
+#include <vector>
 
 class Card {
-    private:
+private:
     std::string name;
     std::string description;
+    std::vector<std::string> effect;
+    std::vector<std::string> condition;
+
 public:
-    Card(std::string name, std::string description);
+    Card(std::string name, std::string description,
+         std::vector<std::string> effect, std::vector<std::string> condition);
+
     ~Card() = default;
 
     std::string get_name() const;
+
+    bool has_condition(const std::string &cond) const;
+
+    std::vector<std::string> get_effect() const;
 };
 
 

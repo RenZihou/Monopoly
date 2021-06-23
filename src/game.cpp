@@ -63,31 +63,42 @@ bool Game::_freeze(int player_id, int round) {
     return true;
 }
 
-bool Game::exec(std::vector<std::string> cmd) {
+bool Game::exec(std::string command) {
+    std::vector<std::string> cmd;
+    std::stringstream commandss(command);
+    while (commandss >> command) cmd.push_back(command);
     auto it = cmd.begin();
     std::string name = *it;
     if (name == "move") {
-        int player_id = std::stoi(*(++it));
+        std::string pid = *(++it);
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int steps = std::stoi(*(++it));
         return this->_move(player_id, steps);
     } else if (name == "moveto") {
-        int player_id = std::stoi(*(++it));
+        std::string pid = *(++it);
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int target = std::stoi(*(++it));
         return this->_moveto(player_id, target);
     } else if (name == "setfund") {
-        int player_id = std::stoi(*(++it));
+        std::string pid = *(++it);
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int fund = std::stoi(*(++it));
         return this->_setfund(player_id, fund);
     } else if (name == "setowner") {
-        int pos = std::stoi(*(++it));
-        int player_id = std::stoi(*(++it));
+        std::string p = *(++it);
+        int pos = p == "~" ? this->context.curr_land : std::stoi(p);
+        std::string pid = *(++it);
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         return this->_setowner(pos, player_id);
     } else if (name == "addfund") {
-        int player_id = std::stoi(*(++it));
+        std::string pid = *(++it);
+        std::cout << (pid == "~") << std::endl;  // DEBUG
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int add = std::stoi(*(++it));
         return this->_addfund(player_id, add);
     } else if (name == "freeze") {
-        int player_id = std::stoi(*(++it));
+        std::string pid = *(++it);
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int round = std::stoi(*(++it));
         return this->_freeze(player_id, round);
     }
@@ -100,13 +111,13 @@ void Game::setup(int world_size, int seed,
     if (world_size < player_names.size())
         throw std::invalid_argument(
                 "world size cannot be smaller than player number");
-    double CLand_prob = Config::config().get_world_rule("CLand_prob");
-    double FLand_prob = Config::config().get_world_rule("FLand_prob");
+    double CLand_prob = this->config->get_world_rule("CLand_prob");
+    double FLand_prob = this->config->get_world_rule("FLand_prob");
     this->map = std::move(Map(world_size, seed, CLand_prob, FLand_prob));
 
     // spawn players
     this->alive = static_cast<int>(player_names.size());
-    int init_fund = static_cast<int>(Config::config().get_player_rule(
+    int init_fund = static_cast<int>(this->config->get_player_rule(
             "init_fund"));
     int player_id = 0;
     std::mt19937 mt(seed);
@@ -121,6 +132,8 @@ void Game::setup(int world_size, int seed,
 
 Game *Game::cycle(int player_id) {
     Player *player = this->players[player_id];
+    this->context.curr_player = player_id;
+    this->context.curr_land = player->get_position();
     // print the map and player info
     this->display(player_id);
 
@@ -145,19 +158,17 @@ Game *Game::cycle(int player_id) {
 #ifdef CHEAT_ON  // only available when CHEAT_ON flag is on
         else if (key == '0') {  // cheat mode
             while (true) {
-                std::string command;
-                std::vector<std::string> cmd;
                 std::cout << "> ";
+                std::string command;
                 getline(std::cin, command);
-                std::stringstream commandss(command);
-                while (commandss >> command) cmd.push_back(command);
-                if (cmd[0] == "quit") break;
-                else this->exec(cmd);
+                if (command == "quit") break;
+                else this->exec(command);
             }
             break;
         }
 #endif
     }
+    this->context.curr_land = player->get_position();
     this->display(player_id);
 
     // check new land
@@ -200,7 +211,15 @@ Game *Game::cycle(int player_id) {
             this->players[curr_land->get_owner()]->upd_fund(rent);
             player->upd_fund(-rent);
         }
-    } else if (curr_land_->get_type() == FUNCTIONAL) {}
+    } else if (curr_land_->get_type() == FUNCTIONAL) {
+        auto curr_land = dynamic_cast<FLand *>(curr_land_);
+        Card *card = curr_land->get_card();
+        if (card->has_condition("instant")) {
+            for (const auto &command : card->get_effect()) this->exec(command);
+        } else {
+            player->add_card(card);
+        }
+    }
     return this;
 }
 

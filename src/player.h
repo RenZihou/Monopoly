@@ -19,10 +19,9 @@ private:
     int spawn_pos;
     int pos;
     int fund;
-    std::vector<Card*> cards;
-    std::vector<Skill*> skill;
+    std::vector<Card *> cards;
+    Skill skill;
     int frozen = 0;
-    bool broke = false;
 
 public:
     Player(int id, std::string name, int init_pos, int init_fund);
@@ -45,7 +44,8 @@ public:
 
     int freeze(int round = 0);
 
-//    void set_broke(bool status = true);
+    void add_card(Card *card);
+
     void use_card();
 
     void use_skill();

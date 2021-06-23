@@ -4,7 +4,7 @@
     "description": "move forward one step and skip the roll",
     "weight": 0.2,
     "effect": [
-      "move <p> 1"
+      "move ~ 1"
     ],
     "condition": [
       "roll"
@@ -15,7 +15,7 @@
     "description": "move forward three steps and skip the roll",
     "weight": 0.2,
     "effect": [
-      "move <p> 3"
+      "move ~ 3"
     ],
     "condition": [
       "roll"
@@ -26,7 +26,7 @@
     "description": "take over current building",
     "weight": 0.2,
     "effect": [
-      "setowner <l> <p>"
+      "setowner ~ ~"
     ],
     "condition": [
       "rent"
@@ -37,7 +37,7 @@
     "description": "you cannot move for 3 rounds",
     "weight": 0.15,
     "effect": [
-      "freeze <p> 3"
+      "freeze ~ 3"
     ],
     "condition": [
       "instant"
@@ -48,7 +48,7 @@
     "description": "revive when go broke and have 500 fund",
     "weight": 0.1,
     "effect": [
-      "setfund <p> 500"
+      "setfund ~ 500"
     ],
     "condition": [
       "broke"
@@ -59,7 +59,7 @@
     "description": "give you lucky fund",
     "weight": 0.15,
     "effect": [
-      "addfund <p> 1288"
+      "addfund ~ 1288"
     ],
     "condition": [
       "instant"

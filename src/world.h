@@ -69,7 +69,7 @@ private:
 public:
     explicit CLand(Building *building);
 
-    ~CLand() = default;
+    ~CLand();
 
     std::string description() override;
 
@@ -90,9 +90,11 @@ private:
 public:
     explicit FLand(Card *card);
 
-    ~FLand() = default;
+    ~FLand();
 
     std::string description() override;
+
+    Card *get_card() const;
 };
 
 class Map {

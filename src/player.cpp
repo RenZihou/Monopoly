@@ -45,11 +45,11 @@ bool Player::upgrade_land(CLand *land) {
     }
 }
 
-//void Player::set_broke(bool status /* = true */) {
-//    this->broke = status;
-//}
-
 int Player::freeze(int round /* = 0 */) {
     this->frozen += round;
     return this->frozen;
+}
+
+void Player::add_card(Card *card) {
+    this->cards.push_back(card);
 }

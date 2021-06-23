@@ -32,12 +32,16 @@ struct C {
     std::string name;
     std::string description;
     double weight;
+    std::vector<std::string> effect;
+    std::vector<std::string> condition;
 };
 
 void from_json(const json &j, C &c) {
     j.at("name").get_to(c.name);
     j.at("description").get_to(c.description);
     j.at("weight").get_to(c.weight);
+    j.at("effect").get_to(c.effect);
+    j.at("condition").get_to(c.condition);
 }
 
 Building::Building(std::string name, int init_upgrade_cost, int init_rent) :
@@ -73,6 +77,10 @@ CLand::CLand(Building *building) : building(building) {
     this->type = COMMERCIAL;
 }
 
+CLand::~CLand() {
+    delete this->building;
+}
+
 std::string CLand::description() {
     std::string des;
     std::string bd_info = this->building->get_name() + " (Lv." +
@@ -100,9 +108,16 @@ void CLand::upgrade() { this->building->upgrade(); }
 
 FLand::FLand(Card *card) : card(card) { this->type = FUNCTIONAL; }
 
+FLand::~FLand() {
+    delete this->card;
+}
+
 std::string FLand::description() {
-//    return "gives '" + this->card->get_name() + "' card";
-    return "FLand";  // TODO
+    return "gives '" + this->card->get_name() + "' card";
+}
+
+Card *FLand::get_card() const {
+    return this->card;
 }
 
 Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
@@ -143,7 +158,8 @@ Map::Map(int size, int seed, double c_prob, double f_prob) : size(size),
             for (const auto &c : c_list) {
                 accu_prob += c.weight;
                 if (b < accu_prob) {  // create c type FLand
-                    auto new_card = new Card{c.name, c.description};
+                    auto new_card = new Card{c.name, c.description,
+                                             c.effect, c.condition};
                     new_land = new FLand(new_card);
                     break;
                 }
