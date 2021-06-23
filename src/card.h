@@ -23,6 +23,8 @@ public:
 
     std::string get_name() const;
 
+    std::string get_des() const;
+
     bool has_condition(const std::string &cond) const;
 
     std::vector<std::string> get_effect() const;

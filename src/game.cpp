@@ -100,6 +100,11 @@ bool Game::exec(std::string command) {
     return true;
 }
 
+bool Game::exec(const std::vector<std::string> &cmd) {
+    for (const auto &cmd_ : cmd) this->exec(cmd_);
+    return true;
+}
+
 void Game::setup(int world_size, int seed,
                  const std::vector<std::string> &player_names) {
     // generate map
@@ -133,9 +138,9 @@ Game *Game::cycle(int player_id) {
     this->display(player_id);
 
     // player instruction
-    std::cout << "Make Your Decision! "
-              << "(type <r> for roll, <c> for card, <h> for help)\n";
     while (true) {
+        std::cout << "Make Your Decision! "
+                  << "(type <r> for roll, <c> for card, <h> for help)\n";
         int key = Game::keyboard();
         if (key == 'r') {  // roll to move
             std::random_device rd;
@@ -151,14 +156,27 @@ Game *Game::cycle(int player_id) {
                 if (card->has_condition("roll")) available.push_back(card);
             }
             // list available cards
-            // Game::display_cards(available);
-            while (true) {
-                int key_ = Game::keyboard();
-//                if (key == "");
-                break;
+            bool used = true;
+            if (!available.empty()) {
+                Game::display_cards(available);
+                while (true) {
+                    int key_ = Game::keyboard();
+                    if (key_ == 'x') {
+                        used = false;
+                        break;
+                    } else if (key_ >= '0' && key_ < '0' + available.size()) {
+                        this->exec(available[key_ - '0']->get_effect());
+                        player->remove_card(available[key_ - '0']);
+                        break;
+                    }
+                }
+            } else {
+                used = false;
+                std::cout << "\nNo available cards :(\n";
             }
+
             // player->use_card();
-            break;
+            if (used) break;
         } else if (key == 'h') {  // TODO: print manual
             break;
         }
@@ -313,12 +331,12 @@ void Game::display() {
         else std::cout << "|  ";
 #ifdef LAND_NUMBER
         int size_ = this->map.get_size();
-        int width_ = 0;
+        int i_width = 0;
         while (size_) {
             size_ /= 10;
-            ++width_;
+            ++i_width;
         }
-        std::cout << "[" << std::right << std::setw(width_) << i << "]";
+        std::cout << "[" << std::right << std::setw(i_width) << i << "]";
 #endif
         std::cout << "[ " << std::left << std::setw(d_width) << descriptions[i]
                   << " ]";
@@ -341,6 +359,33 @@ void Game::display(int player_id) {
     std::cout << "Your Fund: " << this->players[player_id]->get_fund() << "\n";
     // TODO: print cards, skills
     std::flush(std::cout);
+}
+
+void Game::display_cards(std::vector<Card *> cards) {
+    int i_width = 5;
+    int n_width = 4;
+    int d_width = 11;
+    for (const auto &card : cards) {
+        int n_len = static_cast<int>(card->get_name().size());
+        int d_len = static_cast<int>(card->get_des().size());
+        n_width = n_width > n_len ? n_width : n_len;
+        d_width = d_width > d_len ? d_width : d_len;
+    }
+
+    std::cout << "\nINDEX" << " | " << std::setw(n_width) << "NAME" << " | "
+              << "DESCRIPTION\n";
+    std::cout.fill('-');
+    std::cout << std::setw(i_width) << "" << " | "
+              << std::setw(n_width) << "" << " | "
+              << std::setw(d_width) << "" << "\n";
+    std::cout.fill(' ');
+
+    int size = static_cast<int>(cards.size());
+    for (int i = 0; i < size; ++i) {
+        std::cout << std::setw(i_width) << i << " | "
+                  << std::setw(n_width) << cards[i]->get_name() << " | "
+                  << std::setw(d_width) << cards[i]->get_des() << "\n";
+    }
 }
 
 int Game::keyboard() {

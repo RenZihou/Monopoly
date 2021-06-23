@@ -42,6 +42,8 @@ private:
 
     bool exec(std::string cmd);
 
+    bool exec(const std::vector<std::string> &cmd);
+
 public:
     Game(const Game &) = delete;
 
@@ -55,7 +57,10 @@ public:
     Game* cycle(int player_id);
     Game* run();
     void display();
+
     void display(int player_id);
+
+    static void display_cards(std::vector<Card *> cards);
 
     static Game &game() {
         static Game game;

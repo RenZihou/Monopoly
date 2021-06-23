@@ -16,6 +16,8 @@ Card::Card(std::string name, std::string description,
 
 std::string Card::get_name() const { return this->name; }
 
+std::string Card::get_des() const { return this->description; }
+
 bool Card::has_condition(const std::string &cond) const {
     return std::find(this->condition.begin(), this->condition.end(), cond)
            != this->condition.end();
