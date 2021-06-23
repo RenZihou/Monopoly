@@ -12,5 +12,5 @@ see [Monopoly.md](./Monopoly.md)
 
 - [x] user interface - 2021/06/22
 - [x] basic game rules - 2021/06/22
-- [ ] cards
+- [x] cards
 - [ ] player skills

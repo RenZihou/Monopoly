@@ -58,6 +58,34 @@ bool Game::_freeze(int player_id, int round) {
     return true;
 }
 
+bool Game::use_card(Player *player, const std::string &condition) {
+    std::vector<Card *> available;
+    for (auto &card : player->get_cards()) {
+        if (card->has_condition(condition)) available.push_back(card);
+    }
+    // list available cards
+    bool used = true;
+    if (!available.empty()) {
+        Game::display_cards(available);
+        while (true) {
+            std::cout << "Choose a card to use, type <x> to cancel\n";
+            int key_ = Game::keyboard();
+            if (key_ == 'x') {
+                used = false;
+                break;
+            } else if (key_ >= '0' && key_ < '0' + available.size()) {
+                this->exec(available[key_ - '0']->get_effect());
+                player->remove_card(available[key_ - '0']);
+                break;
+            }
+        }
+    } else {
+        used = false;
+        std::cout << "No available cards :(\n";
+    }
+    return used;
+}
+
 bool Game::exec(std::string command) {
     std::vector<std::string> cmd;
     std::stringstream commandss(command);
@@ -150,33 +178,9 @@ Game *Game::cycle(int player_id) {
 //            printf("You got a roll for point %d", steps);
             this->_move(player_id, steps);
             break;
-        } else if (key == 'c') {  // TODO: use card
-            std::vector<Card *> available;
-            for (auto &card : player->get_cards()) {
-                if (card->has_condition("roll")) available.push_back(card);
-            }
-            // list available cards
-            bool used = true;
-            if (!available.empty()) {
-                Game::display_cards(available);
-                while (true) {
-                    int key_ = Game::keyboard();
-                    if (key_ == 'x') {
-                        used = false;
-                        break;
-                    } else if (key_ >= '0' && key_ < '0' + available.size()) {
-                        this->exec(available[key_ - '0']->get_effect());
-                        player->remove_card(available[key_ - '0']);
-                        break;
-                    }
-                }
-            } else {
-                used = false;
-                std::cout << "\nNo available cards :(\n";
-            }
-
-            // player->use_card();
-            if (used) break;
+        } else if (key == 'c') {
+            std::cout << "\n";
+            if (this->use_card(player, "roll")) break;
         } else if (key == 'h') {  // TODO: print manual
             break;
         }
@@ -189,6 +193,7 @@ Game *Game::cycle(int player_id) {
                 if (command == "quit") break;
                 else this->exec(command);
             }
+            break;
         }
 #endif
     }
@@ -212,6 +217,7 @@ Game *Game::cycle(int player_id) {
                         std::cout << "You have no enough money :(\n";
                     }
                     break;
+//                } else if (key == 'c') {
                 } else if (key == 'p') break;
             }
         } else if (curr_land->get_owner() == player_id) {
@@ -230,10 +236,14 @@ Game *Game::cycle(int player_id) {
                 } else if (key == 'p') break;
             }
         } else {
-            // other's land, pay rent
+            // use rent card?
             int rent = curr_land->get_rent();
-            this->players[curr_land->get_owner()]->upd_fund(rent);
-            player->upd_fund(-rent);
+            std::cout << "You reached other's land and should pay $" << rent << "\n";
+            if (!this->use_card(player, "rent")) {
+                // other's land, pay rent
+                this->players[curr_land->get_owner()]->upd_fund(rent);
+                player->upd_fund(-rent);
+            }
         }
     } else if (curr_land_->get_type() == FUNCTIONAL) {
         auto curr_land = dynamic_cast<FLand *>(curr_land_);
