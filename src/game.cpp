@@ -133,6 +133,40 @@ bool Game::exec(const std::vector<std::string> &cmd) {
     return true;
 }
 
+void Game::roll(Player *player) {
+    while (true) {
+        std::cout << "Make Your Decision! "
+                  << "(type <r> for roll, <c> for card, <h> for help)\n";
+        int key = Game::keyboard();
+        if (key == 'r') {  // roll to move
+            std::random_device rd;
+            std::mt19937 mt(rd());
+            std::uniform_int_distribution<int> roll(1, 6);
+            int steps = roll(mt);
+//            printf("You got a roll for point %d", steps);
+            this->_move(player->get_id(), steps);
+            break;
+        } else if (key == 'c') {
+            std::cout << "\n";
+            if (this->use_card(player, "roll")) break;
+        } else if (key == 'h') {  // TODO: print manual
+            break;
+        }
+#ifdef CHEAT_ON  // only available when CHEAT_ON flag is on
+        else if (key == '0') {  // cheat mode
+            while (true) {
+                std::cout << "> ";
+                std::string command;
+                getline(std::cin, command);
+                if (command == "quit") break;
+                else this->exec(command);
+            }
+            break;
+        }
+#endif
+    }
+}
+
 void Game::setup(int world_size, int seed,
                  const std::vector<std::string> &player_names) {
     // generate map
@@ -166,37 +200,8 @@ Game *Game::cycle(int player_id) {
     this->display(player_id);
 
     // player instruction
-    while (true) {
-        std::cout << "Make Your Decision! "
-                  << "(type <r> for roll, <c> for card, <h> for help)\n";
-        int key = Game::keyboard();
-        if (key == 'r') {  // roll to move
-            std::random_device rd;
-            std::mt19937 mt(rd());
-            std::uniform_int_distribution<int> roll(1, 6);
-            int steps = roll(mt);
-//            printf("You got a roll for point %d", steps);
-            this->_move(player_id, steps);
-            break;
-        } else if (key == 'c') {
-            std::cout << "\n";
-            if (this->use_card(player, "roll")) break;
-        } else if (key == 'h') {  // TODO: print manual
-            break;
-        }
-#ifdef CHEAT_ON  // only available when CHEAT_ON flag is on
-        else if (key == '0') {  // cheat mode
-            while (true) {
-                std::cout << "> ";
-                std::string command;
-                getline(std::cin, command);
-                if (command == "quit") break;
-                else this->exec(command);
-            }
-            break;
-        }
-#endif
-    }
+    this->roll(player);
+
     this->context.curr_land = player->get_position();
     this->display(player_id);
 

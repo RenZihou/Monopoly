@@ -44,6 +44,8 @@ private:
 
     bool exec(const std::vector<std::string> &cmd);
 
+    void roll(Player *player);
+
     bool use_card(Player *player, const std::string &condition);
 
 public:

@@ -8,13 +8,15 @@
 #include <string>
 #include <vector>
 
-class Skill {
+#include "card.h"
+
+class Skill : public Card {
 private:
-    std::string name;
-    std::string description;
-    std::vector<std::string> effect;
+//    std::string name;
+//    std::string description;
+//    std::vector<std::string> effect;
     std::vector<int> cool_down;
-    std::vector<std::string> condition;
+//    std::vector<std::string> condition;
 
 public:
     Skill(std::string name, std::string description,
@@ -23,9 +25,18 @@ public:
 
     ~Skill() = default;
 
-    std::string get_name() const;
+//    std::string get_name() const;
+    using Card::get_name;
+    using Card::get_des;
+    using Card::has_condition;
 
-    std::string get_des() const;
+    std::string get_effect(int lv) const;
+
+    int get_cool_down(int lv) const;
+
+    int get_max_lv() const;
+
+//    std::string get_des() const;
 };
 
 #endif

@@ -20,17 +20,23 @@ private:
     int pos;
     int fund;
     std::vector<Card *> cards;
-    Skill skill;
+    struct {
+        Skill *skill;
+        int lv = 0;
+        int cd = 0;
+    } skill;
     int frozen = 0;
 
 public:
     Player(int id, std::string name, int init_pos, int init_fund);
 
-    ~Player() = default;
+    ~Player();
 
     int get_position() const;
 
     std::string get_name() const;
+
+    int get_id() const;
 
     int get_fund() const;
 
@@ -50,9 +56,9 @@ public:
 
     void remove_card(Card *card);
 
-    void use_skill();
+    std::string use_skill() const;
 
-    void promote();
+    bool promote();
 };
 
 #endif
