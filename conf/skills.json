@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Lucky Money",
+    "description": "gives you lucky money",
+    "effect": [
+      "addfund ~ 128",
+      "addfund ~ 188",
+      "addfund ~ 268",
+      "addfund ~ 268"
+    ],
+    "cool-down": [
+      5,
+      4,
+      4,
+      3
+    ],
+    "condition": [
+      "roll",
+      "rent"
+    ]
+  },
+  {
+    "name": "Free Occupy",
+    "description": "occupy a vacant commercial building without cost",
+    "effect": [
+      "setowner ~ ~",
+      "setowner ~ ~",
+      "setowner ~ ~"
+    ],
+    "cool-down": [
+      6,
+      5,
+      4
+    ],
+    "condition": [
+      "buy"
+    ]
+  }
+]
