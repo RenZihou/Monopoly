@@ -27,7 +27,9 @@ private:
 
     Game() = default;
 
+    // instructions
     // TODO: player_id -> player_name
+
     bool _move(int player_id, int steps);
 
     bool _moveto(int player_id, int target);
@@ -44,9 +46,18 @@ private:
 
     bool exec(const std::vector<std::string> &cmd);
 
-    void roll(Player *player);
+    // functions that runs game phases
 
     bool use_card(Player *player, const std::string &condition);
+
+    void roll();
+
+    void buy();
+
+    void rent();
+
+    void upgrade();
+
 
 public:
     Game(const Game &) = delete;

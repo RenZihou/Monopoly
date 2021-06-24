@@ -133,7 +133,8 @@ bool Game::exec(const std::vector<std::string> &cmd) {
     return true;
 }
 
-void Game::roll(Player *player) {
+void Game::roll() {
+    Player *player = this->players[this->context.curr_player];
     while (true) {
         std::cout << "Make Your Decision! "
                   << "(type <r> for roll, <c> for card, <h> for help)\n";
@@ -164,6 +165,53 @@ void Game::roll(Player *player) {
             break;
         }
 #endif
+    }
+}
+
+void Game::buy() {
+    Player *player = this->players[this->context.curr_player];
+    auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
+    std::cout << "You reached a vacant commercial land!"
+              << "(type <b> to buy it, <p> to do nothing)\n";
+    while (true) {
+        int key = Game::keyboard();
+        if (key == 'b') {
+            if (player->buy_land(curr_land)) {
+                std::cout << "You bought it successfully!\n";
+            } else {
+                std::cout << "You have no enough money :(\n";
+            }
+            break;
+        } else if (key == 'p') break;
+    }
+}
+
+void Game::upgrade() {
+    Player *player = this->players[this->context.curr_player];
+    auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
+    std::cout << "You reached your own land!"
+              << "(type <u> to upgrade your building, <p> to do nothing\n";
+    while (true) {
+        int key = Game::keyboard();
+        if (key == 'u') {
+            if (player->upgrade_land(curr_land)) {
+                std::cout << "You upgraded it successfully!\n";
+            } else {
+                std::cout << "You have no enough money :(\n";
+            }
+            break;
+        } else if (key == 'p') break;
+    }
+}
+
+void Game::rent() {
+    Player *player = this->players[this->context.curr_player];
+    auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
+    int rent = curr_land->get_rent();
+    std::cout << "You reached other's land and should pay $" << rent << "\n";
+    if (!this->use_card(player, "rent")) {
+        this->players[curr_land->get_owner()]->upd_fund(rent);
+        player->upd_fund(-rent);
     }
 }
 
@@ -200,55 +248,24 @@ Game *Game::cycle(int player_id) {
     this->display(player_id);
 
     // player instruction
-    this->roll(player);
+    this->roll();
 
     this->context.curr_land = player->get_position();
     this->display(player_id);
 
     // check new land
-    Land *curr_land_ = this->map[player->get_position()];
+    Land *curr_land_ = this->map[this->context.curr_land];
     if (curr_land_->get_type() == COMMERCIAL) {
         auto *curr_land = dynamic_cast<CLand *>(curr_land_);
         if (curr_land->get_owner() == -1) {
             // vacant land, buy or not
-            std::cout << "You reached a vacant commercial land!"
-                      << "(type <b> to buy it, <p> to do nothing)\n";
-            while (true) {
-                int key = Game::keyboard();
-                if (key == 'b') {
-                    if (player->buy_land(curr_land)) {
-                        std::cout << "You bought it successfully!\n";
-                    } else {
-                        std::cout << "You have no enough money :(\n";
-                    }
-                    break;
-//                } else if (key == 'c') {
-                } else if (key == 'p') break;
-            }
+            this->buy();
         } else if (curr_land->get_owner() == player_id) {
             // player's land, upgrade or not
-            std::cout << "You reached your own land!"
-                      << "(type <u> to upgrade your building, <p> to do nothing\n";
-            while (true) {
-                int key = Game::keyboard();
-                if (key == 'u') {
-                    if (player->upgrade_land(curr_land)) {
-                        std::cout << "You upgraded it successfully!\n";
-                    } else {
-                        std::cout << "You have no enough money :(\n";
-                    }
-                    break;
-                } else if (key == 'p') break;
-            }
+            this->upgrade();
         } else {
-            // use rent card?
-            int rent = curr_land->get_rent();
-            std::cout << "You reached other's land and should pay $" << rent << "\n";
-            if (!this->use_card(player, "rent")) {
-                // other's land, pay rent
-                this->players[curr_land->get_owner()]->upd_fund(rent);
-                player->upd_fund(-rent);
-            }
+            // other's land, pay rent
+            this->rent();
         }
     } else if (curr_land_->get_type() == FUNCTIONAL) {
         auto curr_land = dynamic_cast<FLand *>(curr_land_);
@@ -271,7 +288,6 @@ Game *Game::run() {
             else this->players[player_id]->freeze(-1);
         }
 
-//        for (auto &player : players) {
         for (int pid = 0; pid < tot_player; ++pid) {
             Player *player = this->players[pid];
             bool revive_flag = false;
