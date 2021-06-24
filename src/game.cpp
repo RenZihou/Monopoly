@@ -58,6 +58,12 @@ bool Game::_freeze(int player_id, int round) {
     return true;
 }
 
+bool Game::_upgrade(int pos) {
+    auto land = dynamic_cast<CLand *>(this->map[pos]);
+    land->upgrade();
+    return true;
+}
+
 bool Game::use_card(Player *player, const std::string &condition) {
     std::vector<Card *> available;
     for (auto &card : player->get_cards()) {
@@ -135,8 +141,12 @@ bool Game::exec(std::string command) {
         int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int round = std::stoi(*(++it));
         return this->_freeze(player_id, round);
+    } else if (name == "upgrade") {
+        std::string p = *(++it);
+        int pos = p == "~" ? this->context.curr_land : std::stoi(p);
+        return this->_upgrade(pos);
     }
-    return true;
+    return false;
 }
 
 bool Game::exec(const std::vector<std::string> &cmd) {
@@ -282,13 +292,13 @@ Game *Game::cycle(int player_id) {
             if (key == 'u') {
                 // promote skill
                 if (player->promote()) {
-                    std::cout << "You have promoted your skill successfully!";
+                    std::cout << "\nYou have promoted your skill successfully!\n";
                 } else {
-                    std::cout << "You are already at the highest level!\n";
+                    std::cout << "\nYou are already at the highest level!\n";
                 }
                 break;
             } else if (key == 't') {
-                // transfer
+                // TODO: transfer
                 break;
             }
         }

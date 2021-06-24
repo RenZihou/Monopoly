@@ -42,6 +42,8 @@ private:
 
     bool _freeze(int player_id, int round);
 
+    bool _upgrade(int pos);
+
     bool exec(std::string cmd);
 
     bool exec(const std::vector<std::string> &cmd);

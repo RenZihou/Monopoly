@@ -16,6 +16,7 @@
     ],
     "condition": [
       "roll",
+      "buy",
       "rent"
     ]
   },
@@ -34,6 +35,23 @@
     ],
     "condition": [
       "buy"
+    ]
+  },
+  {
+    "name": "Free Upgrade",
+    "description": "upgrade your building without cost",
+    "effect": [
+      "upgrade ~",
+      "upgrade ~",
+      "upgrade ~"
+    ],
+    "cool_down": [
+      6,
+      5,
+      4
+    ],
+    "condition": [
+      "upgrade"
     ]
   }
 ]
