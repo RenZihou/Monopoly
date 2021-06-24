@@ -50,6 +50,8 @@ private:
 
     bool use_card(Player *player, const std::string &condition);
 
+    bool use_skill(Player *player, const std::string &condition);
+
     void roll();
 
     void buy();

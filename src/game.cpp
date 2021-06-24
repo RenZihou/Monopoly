@@ -86,6 +86,17 @@ bool Game::use_card(Player *player, const std::string &condition) {
     return used;
 }
 
+bool Game::use_skill(Player *player, const std::string &condition) {
+    if (player->can_use_skill(condition)) {
+        // use skill
+        this->exec(player->use_skill());
+        return true;
+    } else {
+        std::cout << "You cannot use your skill yet :(\n";
+        return false;
+    }
+}
+
 bool Game::exec(std::string command) {
     std::vector<std::string> cmd;
     std::stringstream commandss(command);
@@ -137,10 +148,11 @@ void Game::roll() {
     Player *player = this->players[this->context.curr_player];
     while (true) {
         std::cout << "Make Your Decision! "
-                  << "(type <r> for roll, <c> for card, <h> for help)\n";
+                  << "(type <r> for roll, <c> for card, "
+                     "<s> for skill, <h> for help)\n";
         int key = Game::keyboard();
         if (key == 'r') {  // roll to move
-            std::random_device rd;
+            std::random_device rd{};
             std::mt19937 mt(rd());
             std::uniform_int_distribution<int> roll(1, 6);
             int steps = roll(mt);
@@ -150,6 +162,9 @@ void Game::roll() {
         } else if (key == 'c') {
             std::cout << "\n";
             if (this->use_card(player, "roll")) break;
+        } else if (key == 's') {
+            std::cout << "\n";
+            if (this->use_skill(player, "roll")) break;
         } else if (key == 'h') {  // TODO: print manual
             break;
         }
@@ -172,7 +187,7 @@ void Game::buy() {
     Player *player = this->players[this->context.curr_player];
     auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
     std::cout << "You reached a vacant commercial land!"
-              << "(type <b> to buy it, <p> to do nothing)\n";
+              << "(type <b> to buy it, <s> to use skill, <p> to do nothing)\n";
     while (true) {
         int key = Game::keyboard();
         if (key == 'b') {
@@ -182,6 +197,9 @@ void Game::buy() {
                 std::cout << "You have no enough money :(\n";
             }
             break;
+        } else if (key == 's') {
+            std::cout << "\n";
+            if (this->use_skill(player, "buy")) break;
         } else if (key == 'p') break;
     }
 }

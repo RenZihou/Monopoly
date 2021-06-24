@@ -118,6 +118,10 @@ int Player::get_cool_down() const {
     return this->skill.skill->get_cool_down(this->skill.lv) - this->skill.cd;
 }
 
+bool Player::can_use_skill(const std::string &condition) const {
+    return !this->get_cool_down() && this->skill.skill->has_condition(condition);
+}
+
 std::string Player::get_skill_des() const {
     std::string cd_des = this->get_cool_down()
                          ? (" [cool-down after " +
@@ -125,6 +129,11 @@ std::string Player::get_skill_des() const {
                          : " [already cooled-down]";
     return this->skill.skill->get_name() + " (Lv." +
            std::to_string(this->skill.lv) + ")" + cd_des;
+}
+
+std::string Player::use_skill() {
+    this->skill.cd = 0;
+    return this->skill.skill->get_effect(this->skill.lv);
 }
 
 bool Player::promote() {

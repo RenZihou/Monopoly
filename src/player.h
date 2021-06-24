@@ -62,9 +62,11 @@ public:
 
     int get_cool_down() const;
 
+    bool can_use_skill(const std::string &condition) const;
+
     std::string get_skill_des() const;
 
-//    std::string use_skill() const;
+    std::string use_skill();
 
     bool promote();
 };
