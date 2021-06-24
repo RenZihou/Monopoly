@@ -174,7 +174,7 @@ void Game::roll() {
             if (this->use_card(player, "roll")) break;
         } else if (key == 's') {
             std::cout << "\n";
-            if (this->use_skill(player, "roll")) break;
+            this->use_skill(player, "roll");
         } else if (key == 'h') {  // TODO: print manual
             break;
         }
@@ -218,7 +218,8 @@ void Game::upgrade() {
     Player *player = this->players[this->context.curr_player];
     auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
     std::cout << "You reached your own land!"
-              << "(type <u> to upgrade your building, <p> to do nothing\n";
+              << "(type <u> to upgrade your building, <s> to use skill, "
+                 "<p> to do nothing\n";
     while (true) {
         int key = Game::keyboard();
         if (key == 'u') {
@@ -228,6 +229,8 @@ void Game::upgrade() {
                 std::cout << "You have no enough money :(\n";
             }
             break;
+        } else if (key == 's') {
+            if (this->use_skill(player, "upgrade")) break;
         } else if (key == 'p') break;
     }
 }
@@ -285,7 +288,7 @@ Game *Game::cycle(int player_id) {
     // skill promote & transfer
     if (player->at_spawn_pos()) {
         std::cout << "You reached your spawn land!\n"
-                  << "You can now choose to promote your skill (<u>) or"
+                  << "You can now choose to promote your skill (<u>) or "
                   << "to transfer to another (<t>)\n";
         while (true) {
             int key = Game::keyboard();
@@ -298,10 +301,20 @@ Game *Game::cycle(int player_id) {
                 }
                 break;
             } else if (key == 't') {
-                // TODO: transfer
+                // transfer
+                std::string curr_name = player->get_skill_name();
+                while (true) {
+                    Skill *new_skill = SkillFactory::factory().gen_skill();
+                    if (new_skill->get_name() != curr_name) {
+                        player->transfer(new_skill);
+                        break;
+                    }
+                    delete new_skill;
+                }
                 break;
             }
         }
+        this->display(player_id);
     }
 
     // check new land

@@ -55,6 +55,7 @@
 * `addfund <player> <add>`
 * `setfund <player> <target>`
 * `setowner <pos> <player>`
+* `upgrade <pos>` 升级建筑
 * `freeze <player> <round>` 冻结玩家指定回合
 * `revive` 复活玩家（仅在触发条件包括`broke`得策略卡中起效）
 * `quit` 退出作弊模式（仅在作弊模式中起效）

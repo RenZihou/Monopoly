@@ -64,11 +64,15 @@ public:
 
     bool can_use_skill(const std::string &condition) const;
 
+    std::string get_skill_name() const;
+
     std::string get_skill_des() const;
 
     std::string use_skill();
 
     bool promote();
+
+    void transfer(Skill *new_skill);
 };
 
 #endif

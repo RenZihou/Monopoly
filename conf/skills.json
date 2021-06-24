@@ -17,7 +17,7 @@
     "condition": [
       "roll",
       "buy",
-      "rent"
+      "upgrade"
     ]
   },
   {
