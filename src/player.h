@@ -16,7 +16,7 @@ class Player {
 private:
     int id;
     std::string name;
-    int spawn_pos;
+    const int spawn_pos;
     int pos;
     int fund;
     std::vector<Card *> cards;
@@ -40,6 +40,8 @@ public:
 
     int get_fund() const;
 
+    bool at_spawn_pos() const;
+
     void move_to(int target);
 
     bool upd_fund(int add);
@@ -56,7 +58,13 @@ public:
 
     void remove_card(Card *card);
 
-    std::string use_skill() const;
+    void cool_down(int r = 1);
+
+    int get_cool_down() const;
+
+    std::string get_skill_des() const;
+
+//    std::string use_skill() const;
 
     bool promote();
 };

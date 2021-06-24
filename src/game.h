@@ -69,8 +69,10 @@ public:
     void setup(int world_size, int seed,
                const std::vector<std::string> &player_names);
 
-    Game* cycle(int player_id);
-    Game* run();
+    Game *cycle(int player_id);
+
+    Game *run();
+
     void display();
 
     void display(int player_id);

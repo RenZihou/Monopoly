@@ -3,14 +3,10 @@
 // @Author: RZH
 
 #include "player.h"
-#include "world.h"
 
 #include <string>
-#include <utility>
-#include <fstream>
 #include <random>
-
-#include <nlohmann/json.hpp>
+#include <algorithm>
 
 using json = nlohmann::json;
 
@@ -31,7 +27,7 @@ void from_json(const json &j, S &s) {
 }
 
 Player::Player(int id, std::string name, int init_pos, int init_fund) :
-        id(id), name(std::move(name)), pos(init_pos), spawn_pos(init_pos),
+        id(id), name(std::move(name)), spawn_pos(init_pos), pos(init_pos),
         fund(init_fund) {
     json skills;
     std::vector<S> s_list;
@@ -58,6 +54,10 @@ int Player::get_position() const { return this->pos; }
 std::string Player::get_name() const { return this->name; }
 
 int Player::get_id() const { return this->id; }
+
+bool Player::at_spawn_pos() const { return this->spawn_pos == this->pos; }
+
+int Player::get_fund() const { return this->fund; }
 
 void Player::move_to(int target) { this->pos = target; }
 
@@ -106,6 +106,25 @@ void Player::remove_card(Card *card) {
             break;
         }
     }
+}
+
+void Player::cool_down(int r /* = 1 */) {
+    this->skill.cd += r;
+    this->skill.cd = std::min(this->skill.cd,
+                              this->skill.skill->get_cool_down(this->skill.lv));
+}
+
+int Player::get_cool_down() const {
+    return this->skill.skill->get_cool_down(this->skill.lv) - this->skill.cd;
+}
+
+std::string Player::get_skill_des() const {
+    std::string cd_des = this->get_cool_down()
+                         ? (" [cool-down after " +
+                            std::to_string(this->get_cool_down()) + " rounds]")
+                         : " [already cooled-down]";
+    return this->skill.skill->get_name() + " (Lv." +
+           std::to_string(this->skill.lv) + ")" + cd_des;
 }
 
 bool Player::promote() {

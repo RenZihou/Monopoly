@@ -8,7 +8,7 @@
       "addfund ~ 268",
       "addfund ~ 268"
     ],
-    "cool-down": [
+    "cool_down": [
       5,
       4,
       4,
@@ -27,7 +27,7 @@
       "setowner ~ ~",
       "setowner ~ ~"
     ],
-    "cool-down": [
+    "cool_down": [
       6,
       5,
       4

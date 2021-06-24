@@ -233,9 +233,9 @@ void Game::setup(int world_size, int seed,
     std::mt19937 mt(seed);
     std::uniform_int_distribution<int> pos(0, world_size - 1);
     for (auto &name : player_names) {
-        auto *new_player = new Player(player_id, name, 0, init_fund);
+        auto *new_player = new Player(player_id, name, pos(mt), init_fund);
         this->players.push_back(new_player);
-        this->_move(player_id, pos(mt));
+        this->_move(player_id, 0);
         ++player_id;
     }
 }
@@ -244,6 +244,7 @@ Game *Game::cycle(int player_id) {
     Player *player = this->players[player_id];
     this->context.curr_player = player_id;
     this->context.curr_land = player->get_position();
+    player->cool_down();
     // print the map and player info
     this->display(player_id);
 
@@ -252,6 +253,28 @@ Game *Game::cycle(int player_id) {
 
     this->context.curr_land = player->get_position();
     this->display(player_id);
+
+    // skill promote & transfer
+    if (player->at_spawn_pos()) {
+        std::cout << "You reached your spawn land!\n"
+                  << "You can now choose to promote your skill (<u>) or"
+                  << "to transfer to another (<t>)\n";
+        while (true) {
+            int key = Game::keyboard();
+            if (key == 'u') {
+                // promote skill
+                if (player->promote()) {
+                    std::cout << "You have promoted your skill successfully!";
+                } else {
+                    std::cout << "You are already at the highest level!\n";
+                }
+                break;
+            } else if (key == 't') {
+                // transfer
+                break;
+            }
+        }
+    }
 
     // check new land
     Land *curr_land_ = this->map[this->context.curr_land];
@@ -388,6 +411,7 @@ void Game::display(int player_id) {
     std::cout << "\n==== CURRENT PLAYER: "
               << this->players[player_id]->get_name() << " ====\n";
     std::cout << "Your Fund: " << this->players[player_id]->get_fund() << "\n";
+    std::cout << "Your Skill: " << this->players[player_id]->get_skill_des() << "\n";
     // TODO: print cards, skills
     std::flush(std::cout);
 }
