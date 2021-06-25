@@ -25,4 +25,4 @@ add_executable(Monopoly src/main.cpp
 target_link_libraries(Monopoly PRIVATE nlohmann_json::nlohmann_json)
 
 add_definitions(-DCHEAT_ON)
-add_definitions(-DLAND_NUMBER)
+#add_definitions(-DLAND_NUMBER)
