@@ -89,6 +89,7 @@ public:
     }
 
     static int keyboard();
+    static void manual();
 };
 
 #endif  // GAME_H_

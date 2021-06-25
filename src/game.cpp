@@ -156,7 +156,7 @@ void Game::roll() {
     Player *player = this->players[this->context.curr_player];
     while (true) {
         std::cout << "Make Your Decision! "
-                  << "(type <r> for roll, <c> for card, "
+                     "(type <r> for roll, <c> for card, "
                      "<s> for skill, <h> for help)\n";
         int key = Game::keyboard();
         if (key == 'r') {  // roll to move
@@ -172,8 +172,9 @@ void Game::roll() {
         } else if (key == 's') {
             std::cout << "\n";
             this->use_skill(player, "roll");
-        } else if (key == 'h') {  // TODO: print manual
-            break;
+        } else if (key == 'h') {
+            Game::manual();
+            this->display(player->get_id());
         }
 #ifdef CHEAT_ON  // only available when CHEAT_ON flag is on
         else if (key == '0') {  // cheat mode
@@ -193,9 +194,10 @@ void Game::roll() {
 void Game::buy() {
     Player *player = this->players[this->context.curr_player];
     auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
-    std::cout << "You reached a vacant commercial land!"
-              << "(type <b> to buy it, <s> to use skill, <p> to do nothing)\n";
     while (true) {
+        std::cout << "You reached a vacant commercial land!"
+                     "(type <b> to buy it, <s> to use skill, "
+                     "<h> for help, <p> to do nothing)\n";
         int key = Game::keyboard();
         if (key == 'b') {
             if (player->buy_land(curr_land)) {
@@ -207,6 +209,9 @@ void Game::buy() {
         } else if (key == 's') {
             std::cout << "\n";
             if (this->use_skill(player, "buy")) break;
+        } else if (key == 'h') {
+            Game::manual();
+            this->display(player->get_id());
         } else if (key == 'p') break;
     }
 }
@@ -214,10 +219,10 @@ void Game::buy() {
 void Game::upgrade() {
     Player *player = this->players[this->context.curr_player];
     auto curr_land = dynamic_cast<CLand *>(this->map[this->context.curr_land]);
-    std::cout << "You reached your own land!"
-              << "(type <u> to upgrade your building, <s> to use skill, "
-                 "<p> to do nothing\n";
     while (true) {
+        std::cout << "You reached your own land!"
+                     "(type <u> to upgrade your building, <s> to use skill, "
+                     "<h> for help, <p> to do nothing\n";
         int key = Game::keyboard();
         if (key == 'u') {
             if (player->upgrade_land(curr_land)) {
@@ -228,6 +233,9 @@ void Game::upgrade() {
             break;
         } else if (key == 's') {
             if (this->use_skill(player, "upgrade")) break;
+        } else if (key == 'h') {
+            Game::manual();
+            this->display(player->get_id());
         } else if (key == 'p') break;
     }
 }
@@ -498,4 +506,45 @@ int Game::keyboard() {
         tcsetattr(0, TCSANOW, &stored_settings);
         return in;
     }
+}
+
+void Game::manual() {
+    system("clear");
+    std::cout << "==== MANUAL ====\n";
+    std::cout << "RULES\n"
+                 "The basic goal of this game is to buy lands, upgrade your "
+                 "buildings and make others pay rents and finally go broke. "
+                 "If you are the only survivor, then you win the game.\n\n"
+                 "Each round of game (per player) is divided into 3 stages:\n"
+                 "  Roll: at this stage, player can choose to roll to move, "
+                 "use cards or use their skills.\n"
+                 "  Upskill: this stage will only be triggered if player "
+                 "arrives ar his/her spawn land. player can choose to promote "
+                 "their skills or transfer to another skill.\n"
+                 "  Buy/Upgrade/Rent: player goes into this stage if he/she "
+                 "arrives at a commercial land, and depend on the owner of "
+                 "the land, the player would take different actions.\n"
+                 "    Buy: if that is a vacant commercial land, player can "
+                 "pay to buy the house on which.\n"
+                 "    Upgrade: if the land belongs to the player, he/she "
+                 "can pay to upgrade the building to make more rent.\n"
+                 "    Rent: if the land belongs to others, the player should "
+                 "pay certain amount of rent to the owner.\n\n"
+                 "CARDS\n"
+                 "Cards are given to player when he/she arrives at a "
+                 "functional land. Cards has various effects and trigger "
+                 "conditions.\n"
+                 "You can type <c> to use your cards (if available).\n\n"
+                 "SKILLS\n"
+                 "Players obtain random lv.0 skills at the beginning. Skills "
+                 "requires several rounds to cool down before another "
+                 "application.\n"
+                 "Once a player arrives at his/her spawn land, he/she can "
+                 "choose to promote the skill or transfer to another skill. "
+                 "Promoting will strengthen the effect or short down the "
+                 "cool-down time. Transferring will give you another lv.0 "
+                 "random skill and disable your previous skill.\n\n";
+    std::cout << "press any key to exit.\n";
+    Game::keyboard();
+    system("clear");
 }

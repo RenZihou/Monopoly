@@ -60,7 +60,7 @@
     "description": "give you lucky fund",
     "weight": 0.15,
     "effect": [
-      "addfund ~ 1288"
+      "addfund ~ 388"
     ],
     "condition": [
       "instant"

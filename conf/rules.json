@@ -8,7 +8,7 @@
     "FLand_prob": 0.3
   },
   "building": {
-    "cost_ratio": 1.2,
-    "rent_ratio": 1.5
+    "cost_ratio": 1.1,
+    "rent_ratio": 1.8
   }
 }
