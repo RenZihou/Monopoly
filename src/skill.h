@@ -56,4 +56,4 @@ public:
     }
 };
 
-#endif
+#endif  // SKILL_H_

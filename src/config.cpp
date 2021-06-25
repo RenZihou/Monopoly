@@ -2,6 +2,7 @@
 // -*- encoding: utf-8 -*-
 // @Author: RZH
 
+#include <fstream>
 #include <string>
 #include <exception>
 

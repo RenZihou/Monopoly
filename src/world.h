@@ -24,7 +24,7 @@ private:
     int level = 0;
     int upgrade_cost = 0;
     int rent = 0;
-//    int owner = -1;
+
 public:
     Building(std::string name, int init_upgrade_cost, int init_rent);
 
@@ -44,17 +44,16 @@ public:
 };
 
 class Land {
-private:
 protected:
     int type;
-public:
-//    int type;
 
+public:
     Land();
 
     ~Land() = default;
 
     virtual std::string description();
+
     int get_type() const;
 };
 
@@ -74,7 +73,9 @@ public:
     std::string description() override;
 
     int get_owner() const;
+
     int get_rent() const;
+
     int get_cost() const;
 
     void set_owner(int owner_id, const std::string &owner_name);
@@ -102,6 +103,7 @@ private:
     int size = 0;
     int seed = 0;
     std::vector<Land *> map{};
+
 public:
     Map() = default;
 
@@ -122,4 +124,4 @@ public:
     int get_size() const;
 };
 
-#endif
+#endif  // WORLD_H_

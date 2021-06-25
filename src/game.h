@@ -91,4 +91,4 @@ public:
     static int keyboard();
 };
 
-#endif
+#endif  // GAME_H_

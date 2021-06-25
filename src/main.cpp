@@ -14,7 +14,7 @@ int main() {
 #endif
     int seed = 1;
     int world_size = 20;
-    std::vector<std::string> player_names {"Player", "Alex", "Aimee"};
+    std::vector<std::string> player_names{"Player", "Alex", "Aimee"};
     Game::game().setup(world_size, seed, player_names);
 //    Game::game().cycle(0);
     Game::game().run();

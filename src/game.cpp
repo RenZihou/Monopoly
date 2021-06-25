@@ -14,7 +14,6 @@
 #include <cstdlib>
 #include <string>
 
-
 bool Game::_moveto(int player_id, int target) {
     if (target >= this->map.get_size()) return false;
     Player *player = this->players[player_id];
@@ -132,7 +131,6 @@ bool Game::exec(std::string command) {
         return this->_setowner(pos, player_id);
     } else if (name == "addfund") {
         std::string pid = *(++it);
-        std::cout << (pid == "~") << std::endl;  // DEBUG
         int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int add = std::stoi(*(++it));
         return this->_addfund(player_id, add);
@@ -166,7 +164,6 @@ void Game::roll() {
             std::mt19937 mt(rd());
             std::uniform_int_distribution<int> roll(1, 6);
             int steps = roll(mt);
-//            printf("You got a roll for point %d", steps);
             this->_move(player->get_id(), steps);
             break;
         } else if (key == 'c') {
@@ -189,7 +186,7 @@ void Game::roll() {
             }
             break;
         }
-#endif
+#endif  // CHEAT_ON
     }
 }
 
@@ -432,7 +429,7 @@ void Game::display() {
             ++i_width;
         }
         std::cout << "[" << std::right << std::setw(i_width) << i << "]";
-#endif
+#endif  // LAND_NUMBER
         std::cout << "[ " << std::left << std::setw(d_width) << descriptions[i]
                   << " ]";
         if (this->players_pos.count(i))  // has player at this position
@@ -453,7 +450,6 @@ void Game::display(int player_id) {
               << this->players[player_id]->get_name() << " ====\n";
     std::cout << "Your Fund: " << this->players[player_id]->get_fund() << "\n";
     std::cout << "Your Skill: " << this->players[player_id]->get_skill_des() << "\n";
-    // TODO: print cards, skills
     std::flush(std::cout);
 }
 

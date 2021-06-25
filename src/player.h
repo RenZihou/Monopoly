@@ -75,4 +75,4 @@ public:
     void transfer(Skill *new_skill);
 };
 
-#endif
+#endif  // PLAYER_H_

@@ -30,5 +30,4 @@ public:
     std::vector<std::string> get_effect() const;
 };
 
-
-#endif
+#endif  // CARD_H_
