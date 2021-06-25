@@ -14,7 +14,7 @@ int main() {
     std::cout << "[Notice] Cheat mode is on!\n";
 #endif
     std::cout << "==== welcome to MONOPOLY GAME ====\n"
-              << "----  developed by Ren Zihou  ----\n\n";
+                 "----  developed by Ren Zihou  ----\n\n";
     while (true) {
         std::cout << "type <g> to start game, <h> for help, <q> to quit\n";
         int key = Game::keyboard();

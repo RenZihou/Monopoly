@@ -14,4 +14,4 @@ see [Monopoly.md](./Monopoly.md)
 - [x] basic game rules - 2021/06/22
 - [x] cards - 2021/06/23
 - [x] player skills - 2021/06/24
-- [ ] other optimization (display, manual, etc.)
+- [x] other optimization (display, manual, etc.)  -2021/06/24
