@@ -191,3 +191,4 @@ std::vector<Land *>::iterator Map::end() { return this->map.end(); }
 
 int Map::get_size() const { return this->size; }
 
+int Map::get_seed() const { return this->seed; }

@@ -57,9 +57,19 @@ bool Game::_freeze(int player_id, int round) {
     return true;
 }
 
+bool Game::_kill(int player_id) {
+    this->_setfund(player_id, 0);
+    return true;
+}
+
 bool Game::_upgrade(int pos) {
     auto land = dynamic_cast<CLand *>(this->map[pos]);
     land->upgrade();
+    return true;
+}
+
+bool Game::_seed() {
+    std::cout << "[seed] " << this->map.get_seed() << "\n";
     return true;
 }
 
@@ -139,10 +149,16 @@ bool Game::exec(std::string command) {
         int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
         int round = std::stoi(*(++it));
         return this->_freeze(player_id, round);
+    } else if (name == "kill") {
+        std::string pid = *(++it);
+        int player_id = pid == "~" ? this->context.curr_player : std::stoi(pid);
+        return this->_kill(player_id);
     } else if (name == "upgrade") {
         std::string p = *(++it);
         int pos = p == "~" ? this->context.curr_land : std::stoi(p);
         return this->_upgrade(pos);
+    } else if (name == "seed") {
+        return this->_seed();
     }
     return false;
 }

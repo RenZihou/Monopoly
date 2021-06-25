@@ -49,7 +49,7 @@
     "weight": 0.1,
     "effect": [
       "revive",
-      "addfund ~ 500"
+      "addfund ~ 300"
     ],
     "condition": [
       "broke"

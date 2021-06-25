@@ -42,7 +42,11 @@ private:
 
     bool _freeze(int player_id, int round);
 
+    bool _kill(int player_id);
+
     bool _upgrade(int pos);
+
+    bool _seed();
 
     bool exec(std::string cmd);
 

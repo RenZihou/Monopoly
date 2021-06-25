@@ -122,6 +122,8 @@ public:
     std::vector<Land *>::iterator end();
 
     int get_size() const;
+
+    int get_seed() const;
 };
 
 #endif  // WORLD_H_
